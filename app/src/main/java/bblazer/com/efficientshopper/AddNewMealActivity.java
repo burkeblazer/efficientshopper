@@ -1,9 +1,7 @@
 package bblazer.com.efficientshopper;
 
-import android.app.Activity;
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,6 +31,7 @@ public class AddNewMealActivity extends AppCompatActivity {
     private Spinner ingredientsSpinner;
     private ImageButton addIngredientButton;
     private RelativeLayout emptyView;
+    private EditText notes;
 
     public static Meal meal;
     public static EditMealsActivity activity;
@@ -73,6 +72,7 @@ public class AddNewMealActivity extends AppCompatActivity {
         ingredientsSpinner  = (Spinner)findViewById(R.id.ingredients_spinner);
         addIngredientButton = (ImageButton)findViewById(R.id.add_ingredients_button);
         emptyView           = (RelativeLayout)findViewById(R.id.empty_view);
+        notes               = (EditText)findViewById(R.id.notes);
 
         // Add a listener for the ingredient amount numberfield on change
         mealName.addTextChangedListener(new TextWatcher() {
@@ -84,6 +84,23 @@ public class AddNewMealActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 meal.setName(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        notes.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                meal.setNotes(s.toString());
             }
 
             @Override
@@ -134,6 +151,7 @@ public class AddNewMealActivity extends AppCompatActivity {
 
     private void loadMealData() {
         mealName.setText(meal.getName());
+        notes.setText(meal.getNotes());
     }
 
     @Override

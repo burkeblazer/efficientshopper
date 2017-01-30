@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class MealAdapter extends BaseAdapter {
 
     public static class ViewHolder{
         public TextView mealName;
+        public ImageView notesImage;
     }
 
     @Override
@@ -59,6 +61,7 @@ public class MealAdapter extends BaseAdapter {
 
             holder = new ViewHolder();
             holder.mealName = (TextView) vi.findViewById(R.id.meal_name);
+            holder.notesImage = (ImageView) vi.findViewById(R.id.notes_image);
 
             vi.setTag(holder);
         }
@@ -67,6 +70,13 @@ public class MealAdapter extends BaseAdapter {
         }
 
         holder.mealName.setText(meal.getName());
+
+        if (meal.getNotes() == null || meal.getNotes().equals("")) {
+            holder.notesImage.setVisibility(View.INVISIBLE);
+        }
+        else {
+            holder.notesImage.setVisibility(View.VISIBLE);
+        }
 
         return vi;
     }

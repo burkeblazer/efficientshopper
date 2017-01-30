@@ -1,9 +1,9 @@
 package bblazer.com.efficientshopper;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -27,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import bblazer.com.efficientshopper.EditStoresActivity;
-import bblazer.com.efficientshopper.R;
 import bblazer.com.efficientshopper.store.Department;
 import bblazer.com.efficientshopper.store.DragAndDropAdapter;
 import bblazer.com.efficientshopper.store.Store;
@@ -39,6 +38,7 @@ public class AddNewStoreActivity extends AppCompatActivity {
     private EditText storeName;
     private DragListView dragListView;
     private RelativeLayout emptyView;
+    private Button addAllDeptButton;
 
     public static EditStoresActivity activity;
     public static Store store;
@@ -81,6 +81,7 @@ public class AddNewStoreActivity extends AppCompatActivity {
         storeName         = (EditText) findViewById(R.id.store_name);
         dragListView      = (DragListView) findViewById(R.id.drag_list_view);
         emptyView         = (RelativeLayout)findViewById(R.id.empty_view);
+        addAllDeptButton  = (Button) findViewById(R.id.add_all_dept_button);
 
         // Create string adapter for dept dropdown
         ArrayList<String> deptArray  = Department.getDefaultDepartments();
@@ -129,6 +130,39 @@ public class AddNewStoreActivity extends AppCompatActivity {
         });
 
         this.setupListRecyclerView();
+
+        addAllDeptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (String selectedDepartment:
+                        Department.getDefaultDepartments() ) {
+                    Department deptObj = new Department(selectedDepartment);
+
+                    // Make sure this dept doesn't already exist
+                    boolean bExists = false;
+                    for (Department dept :
+                            store.getDepartments()) {
+                        if (dept.getName().equals(deptObj.getName())) {
+                            bExists = true;
+                        }
+                    }
+
+                    // Display error
+                    if (bExists) {
+                        continue;
+                    }
+
+                    // Add the department to the store
+                    store.addDepartment(deptObj);
+
+                    // Add the department to the listview
+                    int size = store.getDepartments().size();
+                    mItemArray.add(new Pair<>(new Integer(size + 1), selectedDepartment));
+                    dragListView.getAdapter().notifyDataSetChanged();
+                }
+                checkEmpty();
+            }
+        });
 
         // If we are editting an existing store, load it's data into the form
         if (isEdit) {

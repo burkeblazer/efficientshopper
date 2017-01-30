@@ -1,9 +1,9 @@
 package bblazer.com.efficientshopper;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import bblazer.com.efficientshopper.meal.AddNewIngredientActivity;
 import bblazer.com.efficientshopper.meal.Ingredient;
 import bblazer.com.efficientshopper.meal.IngredientAdapter;
+import bblazer.com.efficientshopper.meal.Meal;
 
 public class EditPantryActivity extends AppCompatActivity {
     private RelativeLayout emptyView;
@@ -103,6 +104,10 @@ public class EditPantryActivity extends AppCompatActivity {
             if (previousName.equals(previousIngredient.getName())) {
                 previousIngredient.updateFrom(ingredient);
             }
+        }
+
+        if (!previousName.equals(ingredient.getName())) {
+            Meal.checkIngredientUpdate(previousName, ingredient.getName(), this);
         }
 
         Ingredient.removeIngredient(this, previousName);

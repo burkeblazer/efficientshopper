@@ -1,7 +1,6 @@
 package bblazer.com.efficientshopper.meal;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -17,6 +16,7 @@ import bblazer.com.efficientshopper.R;
  * Created by bblazer on 1/29/2017.
  */
 public class Meal {
+    private String notes;
     private String name;
     private ArrayList<Ingredient> ingredients = new ArrayList<>();
 
@@ -62,6 +62,14 @@ public class Meal {
         ingredients.add(addIngredient);
 
         return true;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public static ArrayList<Meal> getMeals(Activity context) {
@@ -116,6 +124,7 @@ public class Meal {
     public static Meal clone(Meal meal) {
         Meal newMeal        = new Meal(meal.getName());
         newMeal.ingredients = cloneIngredients(meal);
+        newMeal.notes       = meal.notes;
 
         return newMeal;
     }
@@ -133,5 +142,28 @@ public class Meal {
     public void updateFrom(Meal meal) {
         this.name        = meal.name;
         this.ingredients = meal.ingredients;
+        this.notes       = meal.notes;
+    }
+
+    public static void checkIngredientUpdate(String previousName, String name, Activity activity) {
+        ArrayList<Meal> meals = Meal.getMeals(activity);
+        for (Meal meal :
+                meals) {
+            for (Ingredient ingredient :
+                    meal.getIngredients()) {
+                if (ingredient.getName().equals(previousName)) {
+                    ingredient.setName(name);
+                }
+            }
+        }
+
+        Gson gson = new Gson();
+        Type listOfTestObject = new TypeToken<ArrayList<Meal>>(){}.getType();
+        String json = gson.toJson(meals, listOfTestObject);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(activity.getString(R.string.meals_json), json);
+        editor.commit();
     }
 }
