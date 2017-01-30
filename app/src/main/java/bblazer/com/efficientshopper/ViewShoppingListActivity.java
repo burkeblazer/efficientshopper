@@ -109,7 +109,7 @@ public class ViewShoppingListActivity extends AppCompatActivity {
             keepIntent.setPackage("com.google.android.keep");
 
             keepIntent.putExtra(Intent.EXTRA_SUBJECT, shoppingList.getName());
-            keepIntent.putExtra(Intent.EXTRA_TEXT, "Flower\nyeast\nbutter\nalmonds");
+            keepIntent.putExtra(Intent.EXTRA_TEXT, exportString);
 
             startActivity(keepIntent);
         } catch (Exception e) {
