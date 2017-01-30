@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="bblazer.com.efficientshopper">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".EditStoresActivity"
+            android:label="@string/title_activity_edit_stores"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddNewStoreActivity"
+            android:label="Add New Store"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EditMealsActivity"
+            android:label="@string/title_activity_edit_meals"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddNewMealActivity"
+            android:label="Add New Meal"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EditPantryActivity"
+            android:label="Edit Pantry"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".meal.AddNewIngredientActivity"
+            android:label="Add New Ingredient"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EditListActivity"
+            android:label="@string/title_activity_edit_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddNewShoppingListActivity"
+            android:label="Add New Shopping List"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ViewShoppingListActivity"
+            android:label="View Shopping List"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Efficient Shopper</string>
+    <string name="title_activity_edit_stores">EditStoresActivity</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_delete">Delete</string>
+    <string name="title_activity_edit_meals">EditMealsActivity</string>
+    <string name="stores_json">STORES_JSON</string>
+    <string name="meals_json">MEALS_JSON</string>
+    <string name="ingredients_json">INGREDIENTS_JSON</string>
+    <string name="title_activity_edit_list">EditListActivity</string>
+    <string name="shopping_list_json">SHOPPING_LIST</string>
+</resources>
