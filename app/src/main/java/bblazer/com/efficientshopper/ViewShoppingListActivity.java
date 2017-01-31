@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import bblazer.com.efficientshopper.meal.Ingredient;
+import bblazer.com.efficientshopper.meal.ingredient.Ingredient;
 import bblazer.com.efficientshopper.meal.Meal;
-import bblazer.com.efficientshopper.shoppinglist.ShoppingList;
-import bblazer.com.efficientshopper.shoppinglist.ShoppingListAdapterCheck;
+import bblazer.com.efficientshopper.meal.plan.MealPlan;
+import bblazer.com.efficientshopper.meal.plan.ShoppingListAdapterCheck;
 import bblazer.com.efficientshopper.store.Department;
 import bblazer.com.efficientshopper.store.Store;
 
@@ -28,7 +28,7 @@ public class ViewShoppingListActivity extends AppCompatActivity {
     private ListView listView;
     private ImageButton exportButton;
 
-    public static ShoppingList shoppingList;
+    public static MealPlan mealPlan;
     private ShoppingListAdapterCheck listAdapter;
 
     @Override
@@ -108,7 +108,7 @@ public class ViewShoppingListActivity extends AppCompatActivity {
             keepIntent.setType("text/plain");
             keepIntent.setPackage("com.google.android.keep");
 
-            keepIntent.putExtra(Intent.EXTRA_SUBJECT, shoppingList.getName());
+            keepIntent.putExtra(Intent.EXTRA_SUBJECT, mealPlan.getName());
             keepIntent.putExtra(Intent.EXTRA_TEXT, exportString);
 
             startActivity(keepIntent);
@@ -127,7 +127,7 @@ public class ViewShoppingListActivity extends AppCompatActivity {
 
         // Grab the departments of the store and the ingredients of the meals
         ArrayList<Department> departments = store.getDepartments();
-        ArrayList<Meal> meals             = shoppingList.getMeals();
+        ArrayList<Meal> meals             = mealPlan.getMeals();
         ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
         for (Meal meal :
                 meals) {

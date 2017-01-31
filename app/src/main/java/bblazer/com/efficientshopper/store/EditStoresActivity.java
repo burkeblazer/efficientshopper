@@ -1,4 +1,4 @@
-package bblazer.com.efficientshopper;
+package bblazer.com.efficientshopper.store;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import bblazer.com.efficientshopper.R;
+import bblazer.com.efficientshopper.store.AddNewStoreActivity;
 import bblazer.com.efficientshopper.store.Store;
 import bblazer.com.efficientshopper.store.StoreAdapter;
 

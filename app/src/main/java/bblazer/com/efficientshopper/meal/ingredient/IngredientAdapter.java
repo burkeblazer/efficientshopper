@@ -1,4 +1,4 @@
-package bblazer.com.efficientshopper.meal;
+package bblazer.com.efficientshopper.meal.ingredient;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,11 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
-import bblazer.com.efficientshopper.EditPantryActivity;
 import bblazer.com.efficientshopper.R;
 
 /**

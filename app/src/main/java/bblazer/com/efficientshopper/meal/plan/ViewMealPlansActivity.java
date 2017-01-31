@@ -1,9 +1,8 @@
-package bblazer.com.efficientshopper;
+package bblazer.com.efficientshopper.meal.plan;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
@@ -17,15 +16,15 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import bblazer.com.efficientshopper.shoppinglist.ShoppingList;
-import bblazer.com.efficientshopper.shoppinglist.ShoppingListAdapter;
+import bblazer.com.efficientshopper.R;
+import bblazer.com.efficientshopper.meal.Meal;
 
-public class EditListActivity extends AppCompatActivity {
+public class ViewMealPlansActivity extends AppCompatActivity {
     private RelativeLayout emptyView;
     private ListView listView;
 
-    private ArrayList<ShoppingList> lists;
-    private ShoppingListAdapter shoppingListAdapter;
+    private ArrayList<MealPlan> mealPlans;
+    private MealPlanAdapter mealPlanAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,7 @@ public class EditListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Edit Shopping Lists");
+        getSupportActionBar().setTitle("Edit Meal Plans");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,22 +48,22 @@ public class EditListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addNewShoppingList();
+                addNewMealPlan();
             }
         });
 
-        lists               = ShoppingList.getShoppingLists(this);
+        mealPlans           = MealPlan.getMealPlans(this);
 
         emptyView           = (RelativeLayout)findViewById(R.id.empty_view);
         listView            = (ListView)findViewById(R.id.list_view);
-        shoppingListAdapter = new ShoppingListAdapter(this, lists);
-        listView.setAdapter(shoppingListAdapter);
+        mealPlanAdapter     = new MealPlanAdapter(this, mealPlans);
+        listView.setAdapter(mealPlanAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ShoppingList selList = shoppingListAdapter.getItem(position);
-                editShoppingList(selList);
+                MealPlan selMealPlan = mealPlanAdapter.getItem(position);
+                editMealPlan(selMealPlan);
             }
         });
 
@@ -74,7 +73,7 @@ public class EditListActivity extends AppCompatActivity {
     }
 
     private void checkEmpty() {
-        if (lists.size() == 0) {
+        if (mealPlans.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
         }
         else {
@@ -82,31 +81,31 @@ public class EditListActivity extends AppCompatActivity {
         }
     }
 
-    private void editShoppingList(ShoppingList shoppingList) {
-        Intent intent = new Intent(this, AddNewShoppingListActivity.class);
-        AddNewShoppingListActivity.shoppingList    = shoppingList;
-        AddNewShoppingListActivity.activity = this;
+    private void editMealPlan(MealPlan mealPlan) {
+        Intent intent                 = new Intent(this, EditMealPlanActivity.class);
+        EditMealPlanActivity.mealPlan = mealPlan;
+        EditMealPlanActivity.activity = this;
         startActivity(intent);
     }
 
-    private void addNewShoppingList() {
-        Intent intent = new Intent(this, AddNewShoppingListActivity.class);
-        AddNewShoppingListActivity.shoppingList    = null;
-        AddNewShoppingListActivity.activity = this;
+    private void addNewMealPlan() {
+        Intent intent                 = new Intent(this, EditMealPlanActivity.class);
+        EditMealPlanActivity.mealPlan = null;
+        EditMealPlanActivity.activity = this;
         startActivity(intent);
     }
 
-    public void updateShoppingList(ShoppingList shoppingList, String previousName) {
-        // Find the previous shoppingList and update it
-        for (ShoppingList previousShoppingList :
-                lists) {
-            if (previousName.equals(previousShoppingList.getName())) {
-                previousShoppingList.updateFrom(shoppingList);
+    public void updateMealPlan(MealPlan mealPlan, String previousName) {
+        // Find the previous mealPlan and update it
+        for (MealPlan previousMealPlan :
+                mealPlans) {
+            if (previousName.equals(previousMealPlan.getName())) {
+                previousMealPlan.updateFrom(mealPlan);
             }
         }
 
-        ShoppingList.removeShoppingList(this, previousName);
-        ShoppingList.addShoppingList(this, shoppingList);
+        MealPlan.removeMealPlan(this, previousName);
+        MealPlan.addMealPlan(this, mealPlan);
     }
 
     @Override
@@ -121,15 +120,15 @@ public class EditListActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        ShoppingList shoppingList = lists.get(((AdapterView.AdapterContextMenuInfo)menuInfo).position);
+        MealPlan mealPlan = mealPlans.get(((AdapterView.AdapterContextMenuInfo)menuInfo).position);
         switch(item.getItemId()) {
             case R.id.edit:
-                editShoppingList(shoppingList);
+                editMealPlan(mealPlan);
                 return true;
             case R.id.delete:
-                ShoppingList.removeShoppingList(this, shoppingList.getName());
-                shoppingListAdapter.lists.remove(shoppingList);
-                shoppingListAdapter.notifyDataSetChanged();
+                MealPlan.removeMealPlan(this, mealPlan.getName());
+                mealPlanAdapter.mealPlans.remove(mealPlan);
+                mealPlanAdapter.notifyDataSetChanged();
 
                 checkEmpty();
                 return true;
@@ -139,20 +138,20 @@ public class EditListActivity extends AppCompatActivity {
     }
 
 
-    public void saveNewShoppingList(ShoppingList shoppingList) {
-        // Make sure they aren't trying to add a shoppingList that already exists
+    public void saveNewMealPlan(MealPlan mealPlan) {
+        // Make sure they aren't trying to add a mealPlan that already exists
         boolean bExists = false;
-        for (ShoppingList currentShoppingList :
-                lists) {
-            if (currentShoppingList.getName().equals(shoppingList.getName())) {bExists = true;}
+        for (MealPlan currentMealPlan :
+                mealPlans) {
+            if (currentMealPlan.getName().equals(mealPlan.getName())) {bExists = true;}
         }
 
         if (bExists) {
-            Toast.makeText(this, "Found a duplicate shoppingList, please make sure to add shoppingLists only once", Toast.LENGTH_LONG).show();return;}
+            Toast.makeText(this, "Found a duplicate meal plan, please make sure to add meal plans only once", Toast.LENGTH_LONG).show();return;}
 
-        ShoppingList.addShoppingList(this, shoppingList);
-        shoppingListAdapter.lists.add(shoppingList);
-        shoppingListAdapter.notifyDataSetChanged();
+        MealPlan.addMealPlan(this, mealPlan);
+        mealPlanAdapter.mealPlans.add(mealPlan);
+        mealPlanAdapter.notifyDataSetChanged();
 
         checkEmpty();
     }

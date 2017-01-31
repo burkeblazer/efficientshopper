@@ -1,4 +1,4 @@
-package bblazer.com.efficientshopper.meal;
+package bblazer.com.efficientshopper.meal.ingredient;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,11 +17,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import bblazer.com.efficientshopper.EditPantryActivity;
 import bblazer.com.efficientshopper.R;
 import bblazer.com.efficientshopper.store.Department;
 
-public class AddNewIngredientActivity extends AppCompatActivity {
+public class EditIngredientActivity extends AppCompatActivity {
     private EditText name;
     private EditText amount;
     private Spinner deptSpinner;
@@ -157,7 +156,7 @@ public class AddNewIngredientActivity extends AppCompatActivity {
             case R.id.save_ingredient:
                 // Make sure to validate the new ingredient to make sure they've at least entered a name...
                 if (ingredient.getName() == null || ingredient.getName().equals("")) {
-                    Toast.makeText(AddNewIngredientActivity.this, "Please make sure to at least enter a name before trying to save.", Toast.LENGTH_LONG).show();return true;}
+                    Toast.makeText(EditIngredientActivity.this, "Please make sure to at least enter a name before trying to save.", Toast.LENGTH_LONG).show();return true;}
 
                 if (isEdit) {
                     activity.updateIngredient(ingredient, previousName);

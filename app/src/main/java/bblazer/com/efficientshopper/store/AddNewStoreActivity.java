@@ -1,4 +1,4 @@
-package bblazer.com.efficientshopper;
+package bblazer.com.efficientshopper.store;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -28,9 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import bblazer.com.efficientshopper.store.Department;
-import bblazer.com.efficientshopper.store.DragAndDropAdapter;
-import bblazer.com.efficientshopper.store.Store;
+import bblazer.com.efficientshopper.R;
 
 public class AddNewStoreActivity extends AppCompatActivity {
     private Spinner departmentSpinner;

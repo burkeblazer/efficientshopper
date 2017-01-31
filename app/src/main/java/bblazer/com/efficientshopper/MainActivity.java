@@ -6,6 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import bblazer.com.efficientshopper.meal.EditMealsActivity;
+import bblazer.com.efficientshopper.meal.ingredient.EditPantryActivity;
+import bblazer.com.efficientshopper.meal.plan.ViewMealPlansActivity;
+import bblazer.com.efficientshopper.store.EditStoresActivity;
+
 public class MainActivity extends AppCompatActivity {
     private Button editStores;
     private Button editMeals;
@@ -64,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showCreateList() {
-        Intent intent = new Intent(this, EditListActivity.class);
+        Intent intent = new Intent(this, ViewMealPlansActivity.class);
         startActivity(intent);
     }
 }

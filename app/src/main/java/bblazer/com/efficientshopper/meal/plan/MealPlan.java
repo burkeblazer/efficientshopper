@@ -1,4 +1,4 @@
-package bblazer.com.efficientshopper.shoppinglist;
+package bblazer.com.efficientshopper.meal.plan;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -17,7 +17,7 @@ import bblazer.com.efficientshopper.meal.Meal;
  * Created by bblazer on 1/29/2017.
  */
 
-public class ShoppingList {
+public class MealPlan {
     private String name;
     private ArrayList<Meal> meals = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public class ShoppingList {
         this.meals = meals;
     }
 
-    public ShoppingList(String name) {
+    public MealPlan(String name) {
         this.name = name;
     }
 
@@ -65,74 +65,74 @@ public class ShoppingList {
         return true;
     }
 
-    public static ArrayList<ShoppingList> getShoppingLists(Activity context) {
+    public static ArrayList<MealPlan> getMealPlans(Activity context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        String listsJSON              = preferences.getString(context.getApplicationContext().getResources().getString(R.string.shopping_list_json), "");
-        if (listsJSON == null || listsJSON.equals("")) {return new ArrayList<ShoppingList>();}
+        String mealsJSON              = preferences.getString(context.getApplicationContext().getResources().getString(R.string.meal_plan_json), "");
+        if (mealsJSON == null || mealsJSON.equals("")) {return new ArrayList<MealPlan>();}
 
-        Type listOfTestObject = new TypeToken<ArrayList<ShoppingList>>(){}.getType();
+        Type listOfTestObject = new TypeToken<ArrayList<MealPlan>>(){}.getType();
         Gson gson = new Gson();
-        ArrayList<ShoppingList> lists = gson.fromJson(listsJSON, listOfTestObject);
+        ArrayList<MealPlan> meals = gson.fromJson(mealsJSON, listOfTestObject);
 
-        return lists;
+        return meals;
     }
 
-    public static void addShoppingList(Activity context, ShoppingList shoppingList) {
+    public static void addMealPlan(Activity context, MealPlan mealPlan) {
         Gson gson = new Gson();
-        ArrayList<ShoppingList> shoppingLists = getShoppingLists(context);
-        shoppingLists.add(shoppingList);
-        Type listOfTestObject = new TypeToken<ArrayList<ShoppingList>>(){}.getType();
-        String json = gson.toJson(shoppingLists, listOfTestObject);
+        ArrayList<MealPlan> mealPlans = getMealPlans(context);
+        mealPlans.add(mealPlan);
+        Type listOfTestObject = new TypeToken<ArrayList<MealPlan>>(){}.getType();
+        String json = gson.toJson(mealPlans, listOfTestObject);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(context.getString(R.string.shopping_list_json), json);
+        editor.putString(context.getString(R.string.meal_plan_json), json);
         editor.commit();
     }
 
-    public static void removeShoppingList(Activity context, String listName) {
+    public static void removeMealPlan(Activity context, String mealPlanName) {
         Gson gson = new Gson();
-        ArrayList<ShoppingList> shoppingLists = getShoppingLists(context);
+        ArrayList<MealPlan> mealPlans = getMealPlans(context);
 
         // Find the list
         int index = -1;
-        for (int ct = 0; ct < shoppingLists.size(); ct++) {
-            if (shoppingLists.get(ct).getName().equals(listName)) {
+        for (int ct = 0; ct < mealPlans.size(); ct++) {
+            if (mealPlans.get(ct).getName().equals(mealPlanName)) {
                 index = ct;
             }
         }
 
         if (index == -1) {return;}
 
-        shoppingLists.remove(index);
-        Type listOfTestObject = new TypeToken<ArrayList<ShoppingList>>(){}.getType();
-        String json = gson.toJson(shoppingLists, listOfTestObject);
+        mealPlans.remove(index);
+        Type listOfTestObject = new TypeToken<ArrayList<MealPlan>>(){}.getType();
+        String json = gson.toJson(mealPlans, listOfTestObject);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(context.getString(R.string.shopping_list_json), json);
+        editor.putString(context.getString(R.string.meal_plan_json), json);
         editor.commit();
     }
 
-    public static ShoppingList clone(ShoppingList shoppingList) {
-        ShoppingList newShoppingList = new ShoppingList(shoppingList.getName());
-        newShoppingList.meals        = cloneMeals(shoppingList);
+    public static MealPlan clone(MealPlan mealPlan) {
+        MealPlan newMealPlan = new MealPlan(mealPlan.getName());
+        newMealPlan.meals    = cloneMeals(mealPlan);
 
-        return newShoppingList;
+        return newMealPlan;
     }
 
-    private static ArrayList<Meal> cloneMeals(ShoppingList shoppingList) {
+    private static ArrayList<Meal> cloneMeals(MealPlan mealPlan) {
         ArrayList<Meal> meals = new ArrayList<Meal>();
         for (Meal meal :
-                shoppingList.getMeals()) {
+                mealPlan.getMeals()) {
             meals.add(Meal.clone(meal));
         }
 
         return meals;
     }
 
-    public void updateFrom(ShoppingList shoppingList) {
-        this.meals = shoppingList.meals;
-        this.name  = shoppingList.name;
+    public void updateFrom(MealPlan mealPlan) {
+        this.meals = mealPlan.meals;
+        this.name  = mealPlan.name;
     }
 }

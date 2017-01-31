@@ -1,4 +1,4 @@
-package bblazer.com.efficientshopper;
+package bblazer.com.efficientshopper.meal.ingredient;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,9 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import bblazer.com.efficientshopper.meal.AddNewIngredientActivity;
-import bblazer.com.efficientshopper.meal.Ingredient;
-import bblazer.com.efficientshopper.meal.IngredientAdapter;
+import bblazer.com.efficientshopper.R;
 import bblazer.com.efficientshopper.meal.Meal;
 
 public class EditPantryActivity extends AppCompatActivity {
@@ -84,16 +82,16 @@ public class EditPantryActivity extends AppCompatActivity {
     }
 
     private void editIngredient(Ingredient ingredient) {
-        Intent intent = new Intent(this, AddNewIngredientActivity.class);
-        AddNewIngredientActivity.ingredient    = ingredient;
-        AddNewIngredientActivity.activity = this;
+        Intent intent = new Intent(this, EditIngredientActivity.class);
+        EditIngredientActivity.ingredient    = ingredient;
+        EditIngredientActivity.activity = this;
         startActivity(intent);
     }
 
     private void addNewIngredient() {
-        Intent intent = new Intent(this, AddNewIngredientActivity.class);
-        AddNewIngredientActivity.ingredient    = null;
-        AddNewIngredientActivity.activity = this;
+        Intent intent = new Intent(this, EditIngredientActivity.class);
+        EditIngredientActivity.ingredient    = null;
+        EditIngredientActivity.activity = this;
         startActivity(intent);
     }
 

@@ -1,4 +1,4 @@
-package bblazer.com.efficientshopper.shoppinglist;
+package bblazer.com.efficientshopper.meal.plan;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,26 +16,26 @@ import bblazer.com.efficientshopper.R;
  * Created by bblazer on 1/29/2017.
  */
 
-public class ShoppingListAdapter extends BaseAdapter {
+public class MealPlanAdapter extends BaseAdapter {
     private Activity activity;
-    public ArrayList<ShoppingList> lists;
+    public ArrayList<MealPlan> mealPlans;
     private static LayoutInflater inflater;
 
-    public ShoppingListAdapter(Activity activity, ArrayList<ShoppingList> lists) {
-        this.activity = activity;
-        this.lists    = lists;
+    public MealPlanAdapter(Activity activity, ArrayList<MealPlan> mealPlans) {
+        this.activity  = activity;
+        this.mealPlans = mealPlans;
 
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return lists.size();
+        return mealPlans.size();
     }
 
     @Override
-    public ShoppingList getItem(int position) {
-        return lists.get(position);
+    public MealPlan getItem(int position) {
+        return mealPlans.get(position);
     }
 
     @Override
@@ -44,20 +44,20 @@ public class ShoppingListAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder{
-        public TextView listName;
+        public TextView mealPlanName;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         ViewHolder holder;
-        ShoppingList shoppingList = getItem(position);
+        MealPlan mealPlan = getItem(position);
 
         if (convertView == null) {
             vi = inflater.inflate(R.layout.list_row, null);
 
-            holder = new ViewHolder();
-            holder.listName = (TextView) vi.findViewById(R.id.list_name);
+            holder              = new ViewHolder();
+            holder.mealPlanName = (TextView) vi.findViewById(R.id.meal_plan_name);
 
             vi.setTag(holder);
         }
@@ -65,7 +65,7 @@ public class ShoppingListAdapter extends BaseAdapter {
             holder = (ViewHolder)vi.getTag();
         }
 
-        holder.listName.setText(shoppingList.getName());
+        holder.mealPlanName.setText(mealPlan.getName());
 
         return vi;
     }

@@ -11,14 +11,21 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import bblazer.com.efficientshopper.R;
+import bblazer.com.efficientshopper.meal.ingredient.Ingredient;
 
 /**
  * Created by bblazer on 1/29/2017.
  */
 public class Meal {
     private String notes;
+    private String mealType;
     private String name;
     private ArrayList<Ingredient> ingredients = new ArrayList<>();
+
+    private static final String BREAKFAST = "Breakfast";
+    private static final String LUNCH     = "Lunch";
+    private static final String DINNER    = "Dinner";
+    private static final String SNACK     = "Snack";
 
     public Meal(String name) {
         this.name = name;
@@ -38,6 +45,25 @@ public class Meal {
 
     public void setIngredients(ArrayList<Ingredient> departments) {
         this.ingredients = departments;
+    }
+
+    public String getMealType() {
+        return mealType;
+    }
+
+    public void setMealType(String mealType) {
+        this.mealType = mealType;
+    }
+
+    public static ArrayList<String> getMealTypes () {
+        ArrayList<String> types = new ArrayList<>();
+
+        types.add(BREAKFAST);
+        types.add(LUNCH);
+        types.add(DINNER);
+        types.add(SNACK);
+
+        return types;
     }
 
     public boolean removeIngredient(Ingredient removeIngredient) {
@@ -125,6 +151,7 @@ public class Meal {
         Meal newMeal        = new Meal(meal.getName());
         newMeal.ingredients = cloneIngredients(meal);
         newMeal.notes       = meal.notes;
+        newMeal.mealType    = meal.getMealType();
 
         return newMeal;
     }
@@ -143,6 +170,7 @@ public class Meal {
         this.name        = meal.name;
         this.ingredients = meal.ingredients;
         this.notes       = meal.notes;
+        this.mealType    = meal.getMealType();
     }
 
     public static void checkIngredientUpdate(String previousName, String name, Activity activity) {

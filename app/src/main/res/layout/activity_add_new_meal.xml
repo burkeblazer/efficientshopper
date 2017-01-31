@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:fitsSystemWindows="true"
-    tools:context="bblazer.com.efficientshopper.AddNewMealActivity">
+    tools:context="bblazer.com.efficientshopper.meal.AddNewMealActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -60,16 +60,42 @@
                 android:layout_height="40dp">
 
                 <TextView
+                    android:layout_gravity="center_vertical"
+                    android:text="Meal type:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Spinner
+                    style="@style/SpinnerTheme"
+                    android:id="@+id/meal_type_spinner"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="150dp"
+                    android:layout_height="30dp"></Spinner>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ingredients :"/>
 
                 <Spinner
+                    style="@style/SpinnerTheme"
                     android:id="@+id/ingredients_spinner"
+                    android:layout_marginTop="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_width="150dp"
-                    android:layout_height="40dp"></Spinner>
+                    android:layout_height="30dp"></Spinner>
 
                 <ImageButton
                     android:id="@+id/add_ingredients_button"

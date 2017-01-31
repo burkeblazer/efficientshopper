@@ -1,7 +1,5 @@
 package bblazer.com.efficientshopper.store;
 
-import android.app.Activity;
-import android.media.Image;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,6 @@ import com.woxthebox.draglistview.DragItemAdapter;
 
 import java.util.ArrayList;
 
-import bblazer.com.efficientshopper.AddNewStoreActivity;
 import bblazer.com.efficientshopper.R;
 
 /**

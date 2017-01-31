@@ -9,4 +9,5 @@
     <string name="ingredients_json">INGREDIENTS_JSON</string>
     <string name="title_activity_edit_list">EditListActivity</string>
     <string name="shopping_list_json">SHOPPING_LIST</string>
+    <string name="meal_plan_json">MEAL_PLANS</string>
 </resources>

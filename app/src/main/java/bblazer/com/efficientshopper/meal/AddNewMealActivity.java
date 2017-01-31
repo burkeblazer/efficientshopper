@@ -1,4 +1,4 @@
-package bblazer.com.efficientshopper;
+package bblazer.com.efficientshopper.meal;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,9 +21,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import bblazer.com.efficientshopper.meal.Ingredient;
-import bblazer.com.efficientshopper.meal.IngredientAdapter;
-import bblazer.com.efficientshopper.meal.Meal;
+import bblazer.com.efficientshopper.R;
+import bblazer.com.efficientshopper.meal.ingredient.Ingredient;
+import bblazer.com.efficientshopper.meal.ingredient.IngredientAdapter;
 
 public class AddNewMealActivity extends AppCompatActivity {
     private EditText mealName;
@@ -32,11 +32,13 @@ public class AddNewMealActivity extends AppCompatActivity {
     private ImageButton addIngredientButton;
     private RelativeLayout emptyView;
     private EditText notes;
+    private Spinner mealTypeSpinner;
 
     public static Meal meal;
     public static EditMealsActivity activity;
     private boolean isEdit = false;
     private String previousName = "";
+    private ArrayAdapter<String> mealTypeAdapterSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class AddNewMealActivity extends AppCompatActivity {
         addIngredientButton = (ImageButton)findViewById(R.id.add_ingredients_button);
         emptyView           = (RelativeLayout)findViewById(R.id.empty_view);
         notes               = (EditText)findViewById(R.id.notes);
+        mealTypeSpinner     = (Spinner)findViewById(R.id.meal_type_spinner);
 
         // Add a listener for the ingredient amount numberfield on change
         mealName.addTextChangedListener(new TextWatcher() {
@@ -105,6 +108,26 @@ public class AddNewMealActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // Create string adapter for meal type dropdown
+        ArrayList<String> mealTypeString = Meal.getMealTypes();
+        mealTypeString.add(0, "");
+        mealTypeAdapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mealTypeString);
+        mealTypeAdapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mealTypeSpinner.setAdapter(mealTypeAdapterSpinner);
+
+        mealTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String mealTypeName = mealTypeAdapterSpinner.getItem(position);
+                meal.setMealType(mealTypeName);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
 
             }
         });
@@ -152,6 +175,7 @@ public class AddNewMealActivity extends AppCompatActivity {
     private void loadMealData() {
         mealName.setText(meal.getName());
         notes.setText(meal.getNotes());
+        mealTypeSpinner.setSelection(mealTypeAdapterSpinner.getPosition(meal.getMealType()));
     }
 
     @Override

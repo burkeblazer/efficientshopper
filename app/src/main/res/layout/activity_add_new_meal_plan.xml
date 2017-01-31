@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:fitsSystemWindows="true"
-    tools:context="bblazer.com.efficientshopper.AddNewShoppingListActivity">
+    tools:context="bblazer.com.efficientshopper.meal.plan.EditMealPlanActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -60,11 +60,13 @@
                 android:layout_height="40dp">
 
                 <TextView
+                    android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Meals :"/>
 
                 <Spinner
+                    style="@style/SpinnerTheme"
                     android:id="@+id/meals_spinner"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp"

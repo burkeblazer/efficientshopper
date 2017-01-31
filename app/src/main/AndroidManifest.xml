@@ -16,35 +16,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EditStoresActivity"
+            android:name=".store.EditStoresActivity"
             android:label="@string/title_activity_edit_stores"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AddNewStoreActivity"
+            android:name=".store.AddNewStoreActivity"
             android:label="Add New Store"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".EditMealsActivity"
+            android:name=".meal.EditMealsActivity"
             android:label="@string/title_activity_edit_meals"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AddNewMealActivity"
+            android:name=".meal.AddNewMealActivity"
             android:label="Add New Meal"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".EditPantryActivity"
+            android:name=".meal.ingredient.EditPantryActivity"
             android:label="Edit Pantry"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".meal.AddNewIngredientActivity"
+            android:name=".meal.ingredient.EditIngredientActivity"
             android:label="Add New Ingredient"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".EditListActivity"
+            android:name=".meal.plan.ViewMealPlansActivity"
             android:label="@string/title_activity_edit_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AddNewShoppingListActivity"
+            android:name=".meal.plan.EditMealPlanActivity"
             android:label="Add New Shopping List"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ViewShoppingListActivity"

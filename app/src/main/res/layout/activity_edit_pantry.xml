@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:fitsSystemWindows="true"
-    tools:context="bblazer.com.efficientshopper.EditPantryActivity">
+    tools:context="bblazer.com.efficientshopper.meal.ingredient.EditPantryActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

@@ -1,7 +1,6 @@
-package bblazer.com.efficientshopper;
+package bblazer.com.efficientshopper.meal.plan;
 
 import android.content.Intent;
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -26,11 +25,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import bblazer.com.efficientshopper.R;
+import bblazer.com.efficientshopper.ViewShoppingListActivity;
 import bblazer.com.efficientshopper.meal.Meal;
 import bblazer.com.efficientshopper.meal.MealAdapter;
-import bblazer.com.efficientshopper.shoppinglist.ShoppingList;
 
-public class AddNewShoppingListActivity extends AppCompatActivity {
+public class EditMealPlanActivity extends AppCompatActivity {
     private EditText listName;
     private Spinner mealsSpinner;
     private ListView listView;
@@ -38,15 +38,15 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
     private RelativeLayout emptyView;
     private Button generateListButton;
 
-    public static ShoppingList shoppingList;
-    public static EditListActivity activity;
+    public static MealPlan mealPlan;
+    public static ViewMealPlansActivity activity;
     private boolean isEdit;
     private String previousName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_new_shopping_list);
+        setContentView(R.layout.activity_add_new_meal_plan);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -61,8 +61,8 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
         generateListButton = (Button)findViewById(R.id.generate_list);
 
         // Create or set a store object (this is how we know if we are editting or adding)
-        if (shoppingList == null) {
-            shoppingList = new ShoppingList("");
+        if (mealPlan == null) {
+            mealPlan = new MealPlan("");
             getSupportActionBar().setTitle("Add Shopping List");
 
             // If it's a new one, add a list name default as this week
@@ -70,12 +70,12 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
             Date dt              = new Date();
             String S             = sdf.format(dt);
             listName.setText("Week of "+S);
-            shoppingList.setName("Week of "+S);
+            mealPlan.setName("Week of "+S);
         }
         else {
             isEdit       = true;
-            shoppingList = ShoppingList.clone(shoppingList);
-            previousName = shoppingList.getName();
+            mealPlan = MealPlan.clone(mealPlan);
+            previousName = mealPlan.getName();
             getSupportActionBar().setTitle("Edit Shopping List");
         }
 
@@ -94,7 +94,7 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                shoppingList.setName(s.toString());
+                mealPlan.setName(s.toString());
             }
 
             @Override
@@ -115,7 +115,7 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
         mealAdapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mealsSpinner.setAdapter(mealAdapterSpinner);
 
-        MealAdapter mealAdapter = new MealAdapter(this, shoppingList.getMeals());
+        MealAdapter mealAdapter = new MealAdapter(this, mealPlan.getMeals());
         listView.setAdapter(mealAdapter);
 
         addMealsButton.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +135,7 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
         registerForContextMenu(listView);
 
         if (isEdit) {
-            loadShoppingListData();
+            loadMealPlanData();
         }
 
         checkEmpty();
@@ -143,7 +143,7 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
 
     private void showViewShoppingListActivity() {
         Intent intent = new Intent(this, ViewShoppingListActivity.class);
-        ViewShoppingListActivity.shoppingList = shoppingList;
+        ViewShoppingListActivity.mealPlan = mealPlan;
         startActivity(intent);
     }
 
@@ -160,7 +160,7 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Meal meal = shoppingList.getMeals().get(((AdapterView.AdapterContextMenuInfo)menuInfo).position);
+        Meal meal = mealPlan.getMeals().get(((AdapterView.AdapterContextMenuInfo)menuInfo).position);
         switch(item.getItemId()) {
             case R.id.edit:
                 return true;
@@ -176,7 +176,7 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
     }
 
     private void checkEmpty() {
-        if (shoppingList.getMeals().size() == 0) {
+        if (mealPlan.getMeals().size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
         }
         else {
@@ -184,8 +184,8 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
         }
     }
 
-    private void loadShoppingListData() {
-        listName.setText(shoppingList.getName());
+    private void loadMealPlanData() {
+        listName.setText(mealPlan.getName());
     }
 
     @Override
@@ -210,14 +210,14 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
             case R.id.update_shopping_list:
             case R.id.save_shopping_list:
                 // Make sure to validate the new meal to make sure they've at least entered a name...
-                if (shoppingList.getName() == null || shoppingList.getName().equals("")) {
-                    Toast.makeText(AddNewShoppingListActivity.this, "Please make sure to at least enter a name before trying to save.", Toast.LENGTH_LONG).show();return true;}
+                if (mealPlan.getName() == null || mealPlan.getName().equals("")) {
+                    Toast.makeText(EditMealPlanActivity.this, "Please make sure to at least enter a name before trying to save.", Toast.LENGTH_LONG).show();return true;}
 
                 if (isEdit) {
-                    activity.updateShoppingList(shoppingList, previousName);
+                    activity.updateMealPlan(mealPlan, previousName);
                 }
                 else {
-                    activity.saveNewShoppingList(shoppingList);
+                    activity.saveNewMealPlan(mealPlan);
                 }
                 finish();
                 return true;
@@ -241,7 +241,7 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
         // Make sure this meal doesn't already exist
         boolean bExists = false;
         for (Meal meal :
-                shoppingList.getMeals()) {
+                mealPlan.getMeals()) {
             if (meal.getName().equals(mealObj.getName())) {bExists = true;}
         }
 
@@ -249,7 +249,7 @@ public class AddNewShoppingListActivity extends AppCompatActivity {
         if (bExists) {Toast.makeText(this, "Meal already exists, please modify the currently added one.", Toast.LENGTH_LONG).show();return;}
 
         // Add the meal to the shopping list
-        shoppingList.addMeal(mealObj);
+        mealPlan.addMeal(mealObj);
 
         // Add the meal to the listview
         ((MealAdapter)listView.getAdapter()).notifyDataSetChanged();

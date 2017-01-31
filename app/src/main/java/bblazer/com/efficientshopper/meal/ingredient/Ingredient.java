@@ -1,7 +1,6 @@
-package bblazer.com.efficientshopper.meal;
+package bblazer.com.efficientshopper.meal.ingredient;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 

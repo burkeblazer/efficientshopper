@@ -1,4 +1,4 @@
-package bblazer.com.efficientshopper.shoppinglist;
+package bblazer.com.efficientshopper.meal.plan;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,13 +8,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import bblazer.com.efficientshopper.R;
-import bblazer.com.efficientshopper.meal.Ingredient;
+import bblazer.com.efficientshopper.meal.ingredient.Ingredient;
 
 /**
  * Created by bblazer on 1/29/2017.
