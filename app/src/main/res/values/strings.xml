@@ -14,4 +14,6 @@
         <item>One Time</item>
         <item>Weekly</item>
     </string-array>
+    <string name="title_activity_view_meal_logs">ViewMealLogsActivity</string>
+    <string name="meal_logs_json">MEAL_LOGS_JSON</string>
 </resources>

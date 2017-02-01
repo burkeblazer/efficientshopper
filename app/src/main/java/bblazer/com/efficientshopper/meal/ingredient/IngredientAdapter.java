@@ -80,6 +80,7 @@ public class IngredientAdapter extends BaseAdapter {
             holder.downArrow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (ingredient.getAmount() == 0) {return;}
                     ingredient.setAmount(ingredient.getAmount() - 1);
                     notifyDataSetChanged();
 

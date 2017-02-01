@@ -8,6 +8,8 @@ import android.widget.Button;
 
 import bblazer.com.efficientshopper.meal.EditMealsActivity;
 import bblazer.com.efficientshopper.meal.ingredient.EditPantryActivity;
+import bblazer.com.efficientshopper.meal.log.EditMealLogActivity;
+import bblazer.com.efficientshopper.meal.log.ViewMealLogsActivity;
 import bblazer.com.efficientshopper.meal.plan.ViewMealPlansActivity;
 import bblazer.com.efficientshopper.store.EditStoresActivity;
 
@@ -16,16 +18,18 @@ public class MainActivity extends AppCompatActivity {
     private Button editMeals;
     private Button editPantry;
     private Button createList;
+    private Button editMealLogs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editStores = (Button)findViewById(R.id.EditStores);
-        editMeals  = (Button)findViewById(R.id.EditMeals);
-        editPantry  = (Button)findViewById(R.id.EditPantry);
-        createList  = (Button)findViewById(R.id.CreateList);
+        editStores    = (Button)findViewById(R.id.EditStores);
+        editMeals     = (Button)findViewById(R.id.EditMeals);
+        editPantry    = (Button)findViewById(R.id.EditPantry);
+        createList    = (Button)findViewById(R.id.CreateList);
+        editMealLogs  = (Button)findViewById(R.id.ViewMealLogs);
 
         editStores.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +55,17 @@ public class MainActivity extends AppCompatActivity {
                 showCreateList();
             }
         });
+        editMealLogs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditMealLogs();
+            }
+        });
+    }
+
+    public void showEditMealLogs() {
+        Intent intent = new Intent(this, ViewMealLogsActivity.class);
+        startActivity(intent);
     }
 
     public void showEditStores() {

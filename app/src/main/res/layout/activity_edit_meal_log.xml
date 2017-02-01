@@ -2,12 +2,12 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_add_new_shopping_list"
+    android:id="@+id/activity_add_new_store"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:fitsSystemWindows="true"
-    tools:context="bblazer.com.efficientshopper.meal.plan.EditMealPlanActivity">
+    tools:context="bblazer.com.efficientshopper.meal.AddNewMealActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -24,12 +24,12 @@
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
+        android:layout_marginTop="56dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:padding="15dp"
-            android:layout_marginTop="56dp"
+            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -41,63 +41,75 @@
                 android:layout_width="0px"
                 android:layout_height="0px"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Meal plan name:"/>
-
-            <EditText
-                android:id="@+id/list_name"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@android:drawable/edit_text"
-                android:hint=""/>
-
-            <!--Later date-->
-            <!--<LinearLayout-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="40dp">-->
-
-                <!--<TextView-->
-                    <!--android:layout_gravity="center_vertical"-->
-                    <!--android:text="Active:"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content" />-->
-
-                <!--<CheckBox-->
-                    <!--android:layout_marginTop="4dp"-->
-                    <!--android:id="@+id/is_active_meal_plan"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content" />-->
-
-            <!--</LinearLayout>-->
-
             <LinearLayout
-                android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="40dp">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Log name:"/>
+
+                <EditText
+                    android:layout_marginLeft="12dp"
+                    android:id="@+id/log_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@android:drawable/edit_text"
+                    android:hint=""/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    android:layout_marginRight="17dp"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Meals :"/>
+                    android:text="Log time:"/>
+
+                <Button
+                    android:id="@+id/logTimeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="showDatePickerDialog"
+                    android:text="Click to set" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    android:id="@+id/dropdown_label"
+                    android:layout_marginRight="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Meals:"/>
 
                 <Spinner
                     style="@style/SpinnerTheme"
                     android:id="@+id/meals_spinner"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="40dp"
                     android:layout_marginLeft="5dp"
-                    android:layout_width="230dp"
-                    android:layout_height="40dp"></Spinner>
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"></Spinner>
 
                 <ImageButton
-                    android:id="@+id/add_meals_button"
+                    android:layout_marginLeft="-40dp"
+                    android:id="@+id/add_ingredients_button"
                     android:layout_gravity="center_vertical"
-                    android:src="@android:drawable/ic_input_add"
+                    android:src="@android:drawable/ic_menu_zoom"
+                    android:onClick="toggleDropdown"
                     android:layout_width="40dp"
                     android:layout_height="40dp"/>
 
@@ -105,18 +117,19 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="275dp">
+                android:layout_height="match_parent">
 
                 <ListView
+                    android:nestedScrollingEnabled="true"
                     android:id="@+id/list_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></ListView>
+                    android:layout_height="300dp"></ListView>
 
                 <RelativeLayout
                     android:id="@+id/empty_view"
                     android:background="#D3D3D3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="300dp">
 
                     <ImageView
                         android:id="@+id/sad_face"
@@ -147,14 +160,8 @@
 
             </RelativeLayout>
 
-            <Button
-                android:id="@+id/generate_list"
-                android:layout_gravity="center_horizontal"
-                android:text="Generate List"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp" />
-
         </LinearLayout>
+
     </ScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

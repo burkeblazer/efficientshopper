@@ -47,8 +47,16 @@
             android:name=".meal.plan.EditMealPlanActivity"
             android:label="Add New Shopping List"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ViewShoppingListActivity"
+        <activity
+            android:name=".ViewShoppingListActivity"
             android:label="View Shopping List"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".meal.log.ViewMealLogsActivity"
+            android:label="@string/title_activity_view_meal_logs"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".meal.log.EditMealLogActivity"
+            android:label="@string/title_activity_view_meal_logs"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
