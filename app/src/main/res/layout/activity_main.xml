@@ -69,7 +69,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:drawableTop="@drawable/list_icon"
-                android:text="Create List"
+                android:text="Edit Meal Plans"
                 android:gravity="center" />
 
         </RelativeLayout>
