@@ -73,7 +73,7 @@ public class IngredientAdapter extends BaseAdapter {
                     notifyDataSetChanged();
 
                     // Hack
-                    if (activity.getClass().toString().equals("class bblazer.com.efficientshopper.EditPantryActivity")) {((EditPantryActivity)activity).updateIngredient(ingredient, ingredient.getName());}
+                    if (activity.getClass().toString().equals("class bblazer.com.efficientshopper.meal.ingredient.EditPantryActivity")) {((EditPantryActivity)activity).updateIngredient(ingredient, ingredient.getName());}
                 }
             });
 
@@ -85,7 +85,7 @@ public class IngredientAdapter extends BaseAdapter {
                     notifyDataSetChanged();
 
                     // Hack
-                    if (activity.getClass().toString().equals("class bblazer.com.efficientshopper.EditPantryActivity")) {((EditPantryActivity)activity).updateIngredient(ingredient, ingredient.getName());}
+                    if (activity.getClass().toString().equals("class bblazer.com.efficientshopper.meal.ingredient.EditPantryActivity")) {((EditPantryActivity)activity).updateIngredient(ingredient, ingredient.getName());}
                 }
             });
 

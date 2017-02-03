@@ -3,7 +3,6 @@ package bblazer.com.efficientshopper.meal.log;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
@@ -55,14 +54,14 @@ public class ViewMealLogsActivity extends AppCompatActivity {
         mealLogs       = MealLog.getMealLogs(this);
         emptyView      = (RelativeLayout)findViewById(R.id.empty_view);
         listView       = (ListView)findViewById(R.id.list_view);
-//        mealLogAdapter = new MealLogAdapter(this, mealLogs);
-//        listView.setAdapter(mealLogAdapter);
+        mealLogAdapter = new MealLogAdapter(this, mealLogs);
+        listView.setAdapter(mealLogAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                MealLog selMealLog = mealLogAdapter.getItem(position);
-//                editMealLog(selMealLog);
+                MealLog selMealLog = mealLogAdapter.getItem(position);
+                editMealLog(selMealLog);
             }
         });
 
@@ -128,7 +127,7 @@ public class ViewMealLogsActivity extends AppCompatActivity {
                 return true;
             case R.id.delete:
                 MealLog.removeMealLog(this, mealLog.getName());
-//                mealLogAdapter.mealLogs.remove(mealLog);
+                mealLogAdapter.mealLogs.remove(mealLog);
                 mealLogAdapter.notifyDataSetChanged();
 
                 checkEmpty();
@@ -151,7 +150,7 @@ public class ViewMealLogsActivity extends AppCompatActivity {
             Toast.makeText(this, "Found a duplicate meal log, please make sure to add meal logs only once", Toast.LENGTH_LONG).show();return;}
 
         MealLog.addMealLog(this, mealLog);
-//        mealLogAdapter.mealLogs.add(mealLog);
+        mealLogAdapter.mealLogs.add(mealLog);
         mealLogAdapter.notifyDataSetChanged();
 
         checkEmpty();
