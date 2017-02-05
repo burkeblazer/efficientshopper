@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import bblazer.com.efficientshopper.R;
+import bblazer.com.efficientshopper.meal.log.MealLog;
 import bblazer.com.efficientshopper.store.Department;
 
 /**
@@ -152,5 +153,50 @@ public class Ingredient {
         this.department     = ingredient.department;
         this.amount         = ingredient.amount;
         this.expirationDate = ingredient.expirationDate;
+    }
+
+    public static void addIngredientsAmountsForMealLog(MealLog removeMealLog, Activity context) {
+        ArrayList<Ingredient> ingredients = getIngredients(context);
+        for (Ingredient currentMealLogIngredient :
+                removeMealLog.getIngredientsEaten()) {
+            for (Ingredient currentIngredient :
+                    ingredients) {
+                if (currentIngredient.getName().equals(currentMealLogIngredient.getName())) {
+                    int newAmount = currentIngredient.getAmount() + currentMealLogIngredient.getAmount();
+                    currentIngredient.setAmount(newAmount);}
+            }
+        }
+
+        Gson gson = new Gson();
+        Type listOfTestObject = new TypeToken<ArrayList<Ingredient>>(){}.getType();
+        String json = gson.toJson(ingredients, listOfTestObject);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(context.getString(R.string.ingredients_json), json);
+        editor.commit();
+    }
+
+    public static void removeIngredientsAmountsForMealLog(MealLog mealLog, Activity context) {
+        ArrayList<Ingredient> ingredients = getIngredients(context);
+        for (Ingredient currentMealLogIngredient :
+                mealLog.getIngredientsEaten()) {
+            for (Ingredient currentIngredient :
+                    ingredients) {
+                if (currentIngredient.getName().equals(currentMealLogIngredient.getName())) {
+                    int newAmount = currentIngredient.getAmount() - currentMealLogIngredient.getAmount();
+                    if (newAmount < 0) {newAmount = 0;}
+                    currentIngredient.setAmount(newAmount);}
+            }
+        }
+
+        Gson gson = new Gson();
+        Type listOfTestObject = new TypeToken<ArrayList<Ingredient>>(){}.getType();
+        String json = gson.toJson(ingredients, listOfTestObject);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(context.getString(R.string.ingredients_json), json);
+        editor.commit();
     }
 }

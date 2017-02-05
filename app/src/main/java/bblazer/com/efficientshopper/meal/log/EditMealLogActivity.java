@@ -4,16 +4,16 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.media.Image;
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -30,6 +29,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +56,8 @@ public class EditMealLogActivity extends AppCompatActivity implements
     private String previousName;
     private Calendar calendar;
     FragmentManager fm;
+    private boolean logNameChanged = false;
+    private boolean setProgrammatically = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,16 +76,25 @@ public class EditMealLogActivity extends AppCompatActivity implements
         emptyView     = (RelativeLayout)findViewById(R.id.empty_view);
         dropdownLabel = (TextView) findViewById(R.id.dropdown_label);
 
+
+        calendar = Calendar.getInstance();
+
         // Create or set a store object (this is how we know if we are editting or adding)
         if (mealLog == null) {
             mealLog = new MealLog();
             getSupportActionBar().setTitle("Add Meal Log");
+
+            SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy 'at' h:mm a");
+            logTimeButton.setText(format.format(calendar.getTime()));
+
+            mealLog.setTimeEaten(calendar);
         }
         else {
             isEdit       = true;
             mealLog      = MealLog.clone(mealLog);
             previousName = mealLog.getName();
             getSupportActionBar().setTitle("Edit Meal Log");
+            logNameChanged = true;
         }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -92,11 +103,6 @@ public class EditMealLogActivity extends AppCompatActivity implements
                 finish();
             }
         });
-
-        calendar = Calendar.getInstance();
-
-        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy 'at' h:mm a");
-        logTimeButton.setText(format.format(calendar.getTime()));
 
         fm = getSupportFragmentManager();
 
@@ -110,6 +116,12 @@ public class EditMealLogActivity extends AppCompatActivity implements
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mealLog.setName(s.toString());
+                if (!setProgrammatically) {
+                    logNameChanged = true;
+                }
+                else {
+                    setProgrammatically = false;
+                }
             }
 
             @Override
@@ -119,15 +131,89 @@ public class EditMealLogActivity extends AppCompatActivity implements
         });
 
         ingredientsAdapter = new IngredientAdapter(this, new ArrayList<Ingredient>());
+        listView.setAdapter(ingredientsAdapter);
         registerForContextMenu(listView);
 
         loadMeals();
+
+        if (isEdit) {
+            loadMealLogData();
+        }
+
+        setLogName();
+
+        checkEmpty();
+    }
+
+    private void loadMealLogData() {
+        // Name
+        logName.setText(mealLog.getName());
+        // Ingredients list view
+        ingredientsAdapter = new IngredientAdapter(this, mealLog.getIngredientsEaten());
+        listView.setAdapter(ingredientsAdapter);
+        // Time button
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy 'at' h:mm a");
+        logTimeButton.setText(format.format(mealLog.getTimeEaten().getTime()));
+    }
+
+    private void setLogName() {
+        if (logNameChanged) {return;}
+        Calendar cal            = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy 'at' h:mm a");
+        try {
+            cal.setTime(format.parse(logTimeButton.getText().toString()));
+
+            Calendar breakfast      = Calendar.getInstance();
+            breakfast.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            breakfast.set(Calendar.HOUR_OF_DAY, 6);
+            breakfast.set(Calendar.MINUTE, 0);
+            breakfast.set(Calendar.SECOND, 0);
+
+            Calendar lunch      = Calendar.getInstance();
+            lunch.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            lunch.set(Calendar.HOUR_OF_DAY, 10);
+            lunch.set(Calendar.MINUTE, 30);
+            lunch.set(Calendar.SECOND, 0);
+
+            Calendar dinner      = Calendar.getInstance();
+            dinner.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            dinner.set(Calendar.HOUR_OF_DAY, 16);
+            dinner.set(Calendar.MINUTE, 0);
+            dinner.set(Calendar.SECOND, 0);
+
+            if (cal.getTimeInMillis() < breakfast.getTimeInMillis() || (cal.getTimeInMillis() >= breakfast.getTimeInMillis() && cal.getTimeInMillis() < lunch.getTimeInMillis())) {
+                setProgrammatically = true;
+                logName.setText("Breakfast");
+            }
+            else if (cal.getTimeInMillis() >= lunch.getTimeInMillis() && cal.getTimeInMillis() < dinner.getTimeInMillis()) {
+                setProgrammatically = true;
+                logName.setText("Lunch");
+            }
+            else {
+                setProgrammatically = true;
+                logName.setText("Dinner");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addIngredient (Ingredient ingredient) {
         if (ingredient.getName().equals("")) {return;}
+
+        // Check to see if ingredient already exists
+        ArrayList<Ingredient> ingredients = ((IngredientAdapter)listView.getAdapter()).ingredients;
+        boolean bExists = false;
+        for (Ingredient currentIngredient :
+                ingredients) {
+            if (currentIngredient.getName().equals(ingredient.getName())) {bExists = true;}
+        }
+        if (bExists) {return;}
+
         ((IngredientAdapter)listView.getAdapter()).ingredients.add(ingredient);
         ((IngredientAdapter) listView.getAdapter()).notifyDataSetChanged();
+
+        mealLog.getIngredientsEaten().add(ingredient);
 
         checkEmpty();
     }
@@ -135,6 +221,8 @@ public class EditMealLogActivity extends AppCompatActivity implements
     private void addIngredients (Meal meal) {
         ingredientsAdapter = new IngredientAdapter(this, meal.getIngredients());
         listView.setAdapter(ingredientsAdapter);
+
+        mealLog.setIngredientsEaten(meal.getIngredients());
 
         checkEmpty();
     }
@@ -202,11 +290,50 @@ public class EditMealLogActivity extends AppCompatActivity implements
             case R.id.delete:
                 ingredientsAdapter.ingredients.remove(ingredient);
                 ingredientsAdapter.notifyDataSetChanged();
+                mealLog.getIngredientsEaten().remove(ingredient);
 
                 checkEmpty();
                 return true;
             default:
                 return super.onContextItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.add_shopping_list_menu, menu);
+        MenuItem update = menu.findItem(R.id.update_shopping_list);
+        MenuItem save = menu.findItem(R.id.save_shopping_list);
+        if (isEdit) {
+            save.setVisible(false);
+        }
+        else {
+            update.setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.update_shopping_list:
+            case R.id.save_shopping_list:
+                // Make sure to validate the new meal log to make sure they've at least entered a name...
+                if (mealLog.getName() == null || mealLog.getName().equals("")) {
+                    Toast.makeText(EditMealLogActivity.this, "Please make sure to at least enter a name before trying to save.", Toast.LENGTH_LONG).show();return true;}
+
+                if (isEdit) {
+                    activity.updateMealLog(mealLog, previousName);
+                }
+                else {
+                    activity.saveNewMealLog(mealLog);
+                }
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -228,6 +355,7 @@ public class EditMealLogActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String mealName = (String)mealsSpinner.getAdapter().getItem(position);
+                if (mealName.equals("")) {return;}
                 ArrayList<Meal> meals = Meal.getMeals(EditMealLogActivity.this);
                 Meal meal = new Meal("");
                 for (Meal currentMeal :
@@ -276,6 +404,10 @@ public class EditMealLogActivity extends AppCompatActivity implements
 
         SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy 'at' h:mm a");
         logTimeButton.setText(format.format(calendar.getTime()));
+
+        mealLog.setTimeEaten(calendar);
+
+        setLogName();
     }
 }
 

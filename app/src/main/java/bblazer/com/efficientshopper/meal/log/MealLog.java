@@ -8,20 +8,19 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import bblazer.com.efficientshopper.R;
-import bblazer.com.efficientshopper.meal.Meal;
+import bblazer.com.efficientshopper.meal.ingredient.Ingredient;
 
 /**
  * Created by bblazer on 2/1/2017.
  */
 public class MealLog {
     private String name;
-    private Time timeEaten;
-    private Time timeRecorded;
-    private Meal mealEaten;
+    private Calendar timeEaten;
+    private ArrayList<Ingredient> ingredientsEaten;
 
     public MealLog() {
         return;
@@ -35,28 +34,20 @@ public class MealLog {
         this.name = name;
     }
 
-    public Time getTimeEaten() {
+    public Calendar getTimeEaten() {
         return timeEaten;
     }
 
-    public void setTimeEaten(Time timeEaten) {
+    public void setTimeEaten(Calendar timeEaten) {
         this.timeEaten = timeEaten;
     }
 
-    public Time getTimeRecorded() {
-        return timeRecorded;
+    public ArrayList<Ingredient> getIngredientsEaten() {
+        return ingredientsEaten;
     }
 
-    public void setTimeRecorded(Time timeRecorded) {
-        this.timeRecorded = timeRecorded;
-    }
-
-    public Meal getMealEaten() {
-        return mealEaten;
-    }
-
-    public void setMealsEaten(Meal mealEaten) {
-        this.mealEaten = mealEaten;
+    public void setIngredientsEaten(ArrayList<Ingredient> ingredientsEaten) {
+        this.ingredientsEaten = ingredientsEaten;
     }
 
     public static ArrayList<MealLog> getMealLogs(Activity context) {
@@ -82,6 +73,9 @@ public class MealLog {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(context.getString(R.string.meal_logs_json), json);
         editor.commit();
+
+        // Add ingredients back into pantry
+        Ingredient.removeIngredientsAmountsForMealLog(mealLog, context);
     }
 
     public static void removeMealLog(Activity context, String mealLogName) {
@@ -98,6 +92,7 @@ public class MealLog {
 
         if (index == -1) {return;}
 
+        MealLog removeMealLog = MealLog.clone(mealLogs.get(index));
         mealLogs.remove(index);
         Type listOfTestObject = new TypeToken<ArrayList<MealLog>>(){}.getType();
         String json = gson.toJson(mealLogs, listOfTestObject);
@@ -106,22 +101,33 @@ public class MealLog {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(context.getString(R.string.meal_logs_json), json);
         editor.commit();
+
+        // Add ingredients back into pantry
+        Ingredient.addIngredientsAmountsForMealLog(removeMealLog, context);
     }
 
     public static MealLog clone(MealLog mealLog) {
-        MealLog newMealLog      = new MealLog();
-        newMealLog.name         = mealLog.name;
-        newMealLog.timeEaten    = mealLog.timeEaten;
-        newMealLog.timeRecorded = mealLog.timeRecorded;
-        newMealLog.mealEaten    = Meal.clone(mealLog.mealEaten);
+        MealLog newMealLog          = new MealLog();
+        newMealLog.name             = mealLog.name;
+        newMealLog.timeEaten        = mealLog.timeEaten;
+        newMealLog.ingredientsEaten = cloneIngredients(mealLog);
 
         return newMealLog;
     }
 
+    private static ArrayList<Ingredient> cloneIngredients(MealLog mealLog) {
+        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        for (Ingredient ingredient :
+                mealLog.getIngredientsEaten()) {
+            ingredients.add(Ingredient.clone(ingredient));
+        }
+
+        return ingredients;
+    }
+
     public void updateFrom(MealLog mealLog) {
-        this.name         = mealLog.name;
-        this.timeEaten    = mealLog.timeEaten;
-        this.timeRecorded = mealLog.timeRecorded;
-        this.mealEaten    = Meal.clone(mealLog.mealEaten);
+        this.name             = mealLog.name;
+        this.timeEaten        = mealLog.timeEaten;
+        this.ingredientsEaten = cloneIngredients(mealLog);
     }
 }
