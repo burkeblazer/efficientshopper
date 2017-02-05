@@ -30,30 +30,73 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:text="Name:"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/ingredient_name"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@android:drawable/edit_text"
-            android:hint=""/>
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:text="Amount in pantry:"
+            <TextView
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:text="Name:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:layout_marginLeft="89dp"
+                android:id="@+id/ingredient_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:drawable/edit_text"
+                android:hint=""/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/amount"
-            android:inputType="number"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@android:drawable/edit_text"
-            android:hint=""/>
+            <TextView
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:text="Expiration date:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:onClick="showDatePickerDialog"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/expiration_date"
+                android:text="Click to set date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:text="Amount in pantry:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:layout_marginLeft="5dp"
+                android:id="@+id/amount"
+                android:inputType="number"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:drawable/edit_text"
+                android:hint=""/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_marginBottom="10dp"
@@ -62,17 +105,19 @@
             android:layout_height="40dp">
 
             <TextView
+                android:textSize="17dp"
+                android:textStyle="bold"
                 android:layout_gravity="center_vertical"
                 android:text="Department:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Spinner
+                android:layout_marginLeft="48dp"
                 style="@style/SpinnerTheme"
                 android:id="@+id/dept_spinner"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
                 android:layout_width="150dp"
                 android:layout_height="30dp"></Spinner>
 

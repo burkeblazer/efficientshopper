@@ -1,7 +1,9 @@
 package bblazer.com.efficientshopper;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,6 +33,8 @@ public class ViewShoppingListActivity extends AppCompatActivity {
 
     public static MealPlan mealPlan;
     private ShoppingListAdapterCheck listAdapter;
+    private ArrayList<Ingredient> emptyIngredients = new ArrayList<>();
+    private boolean addEmptyIngredients = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,8 @@ public class ViewShoppingListActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        mealPlan = MealPlan.clone(mealPlan);
 
         storeSpinner = (Spinner)     findViewById(R.id.store_spinner);
         listView     = (ListView)    findViewById(R.id.list_view);
@@ -88,6 +95,76 @@ public class ViewShoppingListActivity extends AppCompatActivity {
 
             }
         });
+
+        // Get empty pantry ingredients
+        setEmptyIngredients();
+    }
+
+    private void setEmptyIngredients() {
+        ArrayList<Ingredient> pantryEmptyIngredients = Ingredient.getEmptyIngredients(this);
+        for (Ingredient currentIngredient :
+                pantryEmptyIngredients) {
+            boolean bFound = false;
+            for (Meal mealPlanMeal :
+                    mealPlan.getMeals()) {
+                for (Ingredient mealIngredient :
+                        mealPlanMeal.getIngredients()) {
+                    if (mealIngredient.getName().equals(currentIngredient.getName())) {
+                        bFound = true;
+                    }
+                }
+            }
+
+            if (!bFound) {
+                emptyIngredients.add(currentIngredient);
+            }
+        }
+
+        if (emptyIngredients.size() <= 0) {return;}
+
+        // Display message asking if the user wants to add these ingredients to the list
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int choice) {
+                switch (choice) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        addEmptyIngredients = true;
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("The following ingredients in your pantry are depleted, would you like them to be added to the list as well?\n\n"+getEmptyIngredientsString())
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    private String getEmptyIngredientsString() {
+        String ingString = "(";
+        if (emptyIngredients.size() == 1) {
+            return "("+emptyIngredients.get(0).getName()+")";
+        }
+        else if (emptyIngredients.size() == 2) {
+            return "("+emptyIngredients.get(0).getName()+" and "+emptyIngredients.get(1).getName()+")";
+        }
+        else {
+            int total = emptyIngredients.size();
+            int ct    = 0;
+            for (Ingredient currentIngredient :
+                    emptyIngredients) {
+                ct++;
+                if (ct == total) {break;}
+                if (ct == 1)     {ingString += currentIngredient.getName();continue;}
+                ingString += ", "+currentIngredient.getName();
+            }
+
+            ingString += ", and "+emptyIngredients.get(total-1).getName();
+        }
+
+        return ingString;
     }
 
     private String getExportString() {
@@ -162,6 +239,23 @@ public class ViewShoppingListActivity extends AppCompatActivity {
 
                     ingredients.add(clonedIngredient);
                 }
+            }
+        }
+
+        if (addEmptyIngredients) {
+            for (Ingredient currentEmptyIngredient :
+                    emptyIngredients) {
+                Ingredient cloneIngredient = Ingredient.clone(currentEmptyIngredient);
+
+                for (Department department :
+                        departments) {
+                    if (department.getName().equals(cloneIngredient.getDepartment().getName())) {
+                        cloneIngredient.setSortOrder(department.getSortNumber());
+                    }
+                }
+
+                cloneIngredient.setAmount(-1);
+                ingredients.add(cloneIngredient);
             }
         }
 

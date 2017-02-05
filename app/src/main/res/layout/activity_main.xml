@@ -87,7 +87,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:drawableTop="@drawable/list_icon"
-                android:text="Edit Meal Plans"
+                android:text="Edit Meal Logs"
                 android:gravity="center" />
 
         </RelativeLayout>

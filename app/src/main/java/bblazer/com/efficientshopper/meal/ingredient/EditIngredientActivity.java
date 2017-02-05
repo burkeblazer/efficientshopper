@@ -1,5 +1,10 @@
 package bblazer.com.efficientshopper.meal.ingredient;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,19 +16,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import bblazer.com.efficientshopper.R;
 import bblazer.com.efficientshopper.store.Department;
 
-public class EditIngredientActivity extends AppCompatActivity {
+public class EditIngredientActivity extends AppCompatActivity implements
+        DatePickerFragment.DatePickerListener {
     private EditText name;
     private EditText amount;
     private Spinner deptSpinner;
+    private Button expirationDateButton;
 
     public static Ingredient ingredient;
     public static EditPantryActivity activity;
@@ -31,6 +42,8 @@ public class EditIngredientActivity extends AppCompatActivity {
     private boolean isEdit;
     private String previousName;
     private ArrayAdapter<String> deptAdapter;
+    private FragmentManager fm;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +74,10 @@ public class EditIngredientActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Edit Ingredient");
         }
 
-        name        = (EditText)findViewById(R.id.ingredient_name);
-        amount      = (EditText)findViewById(R.id.amount);
-        deptSpinner = (Spinner)findViewById(R.id.dept_spinner);
+        name                 = (EditText)findViewById(R.id.ingredient_name);
+        amount               = (EditText)findViewById(R.id.amount);
+        deptSpinner          = (Spinner)findViewById(R.id.dept_spinner);
+        expirationDateButton = (Button) findViewById(R.id.expiration_date);
 
         // Add a listener for the ingredient name textfield on change
         name.addTextChangedListener(new TextWatcher() {
@@ -122,15 +136,33 @@ public class EditIngredientActivity extends AppCompatActivity {
             }
         });
 
+        calendar = Calendar.getInstance();
+        fm = getSupportFragmentManager();
+
         if (isEdit) {
             loadIngredientData();
         }
+    }
+
+    @Override
+    public void onDateSet(int year, int month, int day) {
+        calendar.set(year, month, day);
+
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+        expirationDateButton.setText(format.format(calendar.getTime()));
+        ingredient.setExpirationDate(calendar.getTime());
     }
 
     private void loadIngredientData() {
         name.setText(ingredient.getName());
         amount.setText(Integer.toString(ingredient.getAmount()));
         deptSpinner.setSelection(deptAdapter.getPosition(ingredient.getDepartment().getName()));
+        if (ingredient.getExpirationDate() != null) {
+            calendar.setTime(ingredient.getExpirationDate());
+
+            SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+            expirationDateButton.setText(format.format(calendar.getTime()));
+        }
     }
 
     @Override
@@ -169,5 +201,52 @@ public class EditIngredientActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void showDatePickerDialog(View view) {
+        DatePickerFragment dateDialog = new DatePickerFragment();
+        dateDialog.show(fm, "fragment_date");
+    }
+}
+
+class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener
+{
+    public interface DatePickerListener
+    {
+        public void onDateSet(int year, int month, int day);
+    }
+
+    private DatePickerFragment.DatePickerListener listener;
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Use the current date as the default date in the picker
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        // Create a new instance of DatePickerDialog and return it
+        return new DatePickerDialog(getActivity(), this, year, month, day);
+    }
+
+    @Override
+    public void onAttach(Activity activity)
+    {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            listener = (DatePickerListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
+    public void onDateSet(DatePicker view, int year, int month, int day)
+    {
+        listener.onDateSet(year, month, day);
     }
 }

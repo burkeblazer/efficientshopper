@@ -81,7 +81,12 @@ public class ShoppingListAdapterCheck extends BaseAdapter {
         }
 
         holder.ingredientName.setText(ingredient.getName());
-        holder.amount.setText(Integer.toString(ingredient.getAmount()));
+        if (ingredient.getAmount() == -1) {
+            holder.amount.setText("?");
+        }
+        else {
+            holder.amount.setText(Integer.toString(ingredient.getAmount()));
+        }
 
         return vi;
     }

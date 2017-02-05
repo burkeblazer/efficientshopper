@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="bblazer.com.efficientshopper">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -58,6 +61,17 @@
         <activity android:name=".meal.log.EditMealLogActivity"
             android:label="@string/title_activity_view_meal_logs"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <service android:name=".NotificationService" android:enabled="true" >
+        </service>
+
+        <receiver android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.bblazer.efficient.ActivityRecognition.RestartSensor"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

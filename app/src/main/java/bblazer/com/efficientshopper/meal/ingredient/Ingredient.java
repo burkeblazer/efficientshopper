@@ -7,8 +7,10 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 
 import bblazer.com.efficientshopper.R;
 import bblazer.com.efficientshopper.store.Department;
@@ -22,6 +24,7 @@ public class Ingredient {
     private int amount;
     private int sortOrder;
     private boolean checked;
+    private Date expirationDate;
 
     public Ingredient(String name) {
         this.name = name;
@@ -51,6 +54,14 @@ public class Ingredient {
         this.amount = amount;
     }
 
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
     public int getSortOrder() {
         return sortOrder;
     }
@@ -77,6 +88,17 @@ public class Ingredient {
         ArrayList<Ingredient> ingredients = gson.fromJson(ingredientsJSON, listOfTestObject);
 
         return ingredients;
+    }
+
+    public static ArrayList<Ingredient> getEmptyIngredients(Activity context) {
+        ArrayList<Ingredient> ingredients      = getIngredients(context);
+        ArrayList<Ingredient> emptyIngredients = new ArrayList<Ingredient>();
+        for (Ingredient ingredient :
+                ingredients) {
+            if (ingredient.getAmount() <= 0) {emptyIngredients.add(ingredient);}
+        }
+
+        return emptyIngredients;
     }
 
     public static void addIngredient(Activity context, Ingredient ingredient) {
@@ -117,16 +139,18 @@ public class Ingredient {
     }
 
     public static Ingredient clone(Ingredient ingredient) {
-        Ingredient newIngredient = new Ingredient(ingredient.getName());
-        newIngredient.department = ingredient.department;
-        newIngredient.amount     = ingredient.amount;
+        Ingredient newIngredient     = new Ingredient(ingredient.getName());
+        newIngredient.department     = ingredient.department;
+        newIngredient.amount         = ingredient.amount;
+        newIngredient.expirationDate = ingredient.expirationDate;
 
         return newIngredient;
     }
 
     public void updateFrom(Ingredient ingredient) {
-        this.name       = ingredient.name;
-        this.department = ingredient.department;
-        this.amount     = ingredient.amount;
+        this.name           = ingredient.name;
+        this.department     = ingredient.department;
+        this.amount         = ingredient.amount;
+        this.expirationDate = ingredient.expirationDate;
     }
 }
