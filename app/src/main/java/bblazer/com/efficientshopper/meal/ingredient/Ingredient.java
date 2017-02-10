@@ -1,13 +1,13 @@
 package bblazer.com.efficientshopper.meal.ingredient;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,7 +79,7 @@ public class Ingredient {
         this.sortOrder = sortOrder;
     }
 
-    public static ArrayList<Ingredient> getIngredients(Activity context) {
+    public static ArrayList<Ingredient> getIngredients(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         String ingredientsJSON        = preferences.getString(context.getApplicationContext().getResources().getString(R.string.ingredients_json), "");
         if (ingredientsJSON == null || ingredientsJSON.equals("")) {return new ArrayList<Ingredient>();}

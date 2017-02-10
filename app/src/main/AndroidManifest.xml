@@ -62,16 +62,8 @@
             android:label="@string/title_activity_view_meal_logs"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <service android:name=".NotificationService" android:enabled="true" >
-        </service>
-
-        <receiver android:name=".BootReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.bblazer.efficient.ActivityRecognition.RestartSensor"/>
-            </intent-filter>
-        </receiver>
+        <!--<service android:name=".NotificationService" />-->
+        <receiver android:name=".BootReceiver"></receiver>
     </application>
 
 </manifest>

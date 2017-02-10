@@ -1,35 +1,51 @@
 package bblazer.com.efficientshopper;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.os.AsyncTask;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
-import android.os.PowerManager;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.gms.gcm.GcmTaskService;
-import com.google.android.gms.gcm.TaskParams;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by bblazer on 2/5/2017.
  */
-public class NotificationService extends WakefulIntentService {
-    public AppService() {
-        super("AppService");
+public class NotificationService extends Service {
+
+    private boolean isRunning;
+    private Context context;
+    private Thread backgroundThread;
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     @Override
-    protected void doWakefulWork(Intent intent) {
-        Log.i("AppService", "I'm awake! I'm awake! (yawn)");
+    public void onCreate() {
+        this.context = this;
+        this.isRunning = false;
+        this.backgroundThread = new Thread(myTask);
     }
+
+    private Runnable myTask = new Runnable() {
+        public void run() {
+            Log.e("STUFFFFFFF","MORE STUFFFFF");
+            stopSelf();
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        this.isRunning = false;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if(!this.isRunning) {
+            this.isRunning = true;
+            this.backgroundThread.start();
+        }
+        return START_STICKY;
+    }
+
 }

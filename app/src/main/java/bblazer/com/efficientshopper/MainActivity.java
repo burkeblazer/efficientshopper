@@ -1,25 +1,17 @@
 package bblazer.com.efficientshopper;
 
-import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.SystemClock;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.SystemClock;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.gcm.PeriodicTask;
-
 import bblazer.com.efficientshopper.meal.EditMealsActivity;
 import bblazer.com.efficientshopper.meal.ingredient.EditPantryActivity;
-import bblazer.com.efficientshopper.meal.log.EditMealLogActivity;
 import bblazer.com.efficientshopper.meal.log.ViewMealLogsActivity;
 import bblazer.com.efficientshopper.meal.plan.ViewMealPlansActivity;
 import bblazer.com.efficientshopper.store.EditStoresActivity;
@@ -30,8 +22,6 @@ public class MainActivity extends AppCompatActivity {
     private Button editPantry;
     private Button createList;
     private Button editMealLogs;
-    private NotificationService mSensorService;
-    private Intent mServiceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,23 +69,10 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-        mSensorService = new NotificationService(this);
-        mServiceIntent = new Intent(this, mSensorService.getClass());
-        if (!isMyServiceRunning(mSensorService.getClass())) {
-            startService(mServiceIntent);
-        }
-    }
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("isMyServiceRunning?", true+"");
-                return true;
-            }
-        }
-        Log.i ("isMyServiceRunning?", false+"");
-        return false;
+        Intent alarm                = new Intent(this, BootReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarm, 0);
+        AlarmManager alarmManager   = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.currentThreadTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     public void showEditMealLogs() {
