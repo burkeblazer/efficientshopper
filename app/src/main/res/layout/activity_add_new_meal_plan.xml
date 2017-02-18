@@ -41,17 +41,27 @@
                 android:layout_width="0px"
                 android:layout_height="0px"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Meal plan name:"/>
-
-            <EditText
-                android:id="@+id/list_name"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@android:drawable/edit_text"
-                android:hint=""/>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textSize="17dp"
+                    android:textStyle="bold"
+                    android:text="Plan name:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/list_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@android:drawable/edit_text"
+                    android:hint=""/>
+
+            </LinearLayout>
 
             <!--Later date-->
             <!--<LinearLayout-->
@@ -81,17 +91,19 @@
                 android:layout_height="40dp">
 
                 <TextView
+                    android:textSize="17dp"
+                    android:textStyle="bold"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Meals :"/>
+                    android:text="Meals:"/>
 
                 <Spinner
                     style="@style/SpinnerTheme"
                     android:id="@+id/meals_spinner"
                     android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="230dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_width="180dp"
                     android:layout_height="40dp"></Spinner>
 
                 <ImageButton

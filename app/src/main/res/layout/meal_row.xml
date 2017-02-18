@@ -1,24 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="5dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_marginLeft="10dp"
-        android:id="@+id/meal_name"
-        android:layout_centerVertical="true"
-        android:textSize="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:weightSum="2"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_marginRight="10dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:id="@+id/notes_image"
-        android:src="@android:drawable/btn_star_big_on"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
+        <LinearLayout
+            android:background="@android:color/darker_gray"
+            android:id="@+id/group_header"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:textColor="@android:color/white"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/group_header_name"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:id="@+id/meal_name"
+                android:layout_centerVertical="true"
+                android:textSize="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/notes_image"
+                android:src="@android:drawable/btn_star_big_on"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

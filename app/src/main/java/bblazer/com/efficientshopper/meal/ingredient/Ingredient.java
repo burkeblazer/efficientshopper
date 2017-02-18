@@ -10,9 +10,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import bblazer.com.efficientshopper.R;
+import bblazer.com.efficientshopper.event.Event;
 import bblazer.com.efficientshopper.meal.log.MealLog;
 import bblazer.com.efficientshopper.store.Department;
 
@@ -198,5 +200,32 @@ public class Ingredient {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(context.getString(R.string.ingredients_json), json);
         editor.commit();
+    }
+
+    public static void addEvent(Ingredient ingredient, Context context) {
+        Event addEvent = new Event();
+        addEvent.setType("Ingredient");
+        addEvent.setDescription("Added "+ingredient.getName()+" to pantry");
+        addEvent.setCreated(Calendar.getInstance());
+
+        Event.addEvent(context, addEvent);
+    }
+
+    public static void updateEvent(Ingredient ingredient, Context context) {
+        Event addEvent = new Event();
+        addEvent.setType("Ingredient");
+        addEvent.setDescription("Updated "+ingredient.getName()+" in pantry");
+        addEvent.setCreated(Calendar.getInstance());
+
+        Event.addEvent(context, addEvent);
+    }
+
+    public static void deleteEvent(Ingredient ingredient, Context context) {
+        Event addEvent = new Event();
+        addEvent.setType("Ingredient");
+        addEvent.setDescription("Removed "+ingredient.getName()+" from pantry");
+        addEvent.setCreated(Calendar.getInstance());
+
+        Event.addEvent(context, addEvent);
     }
 }

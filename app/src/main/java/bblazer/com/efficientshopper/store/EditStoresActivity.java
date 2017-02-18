@@ -114,6 +114,7 @@ public class EditStoresActivity extends AppCompatActivity {
                 editStore(store);
                 return true;
             case R.id.delete:
+                Store.deleteEvent(store, this);
                 Store.removeStore(this, store.getName());
                 storeAdapter.stores.remove(store);
                 storeAdapter.notifyDataSetChanged();
@@ -134,6 +135,7 @@ public class EditStoresActivity extends AppCompatActivity {
             }
         }
 
+        Store.updateEvent(store, this);
         Store.removeStore(this, previousName);
         Store.addStore(this, store);
     }
@@ -148,6 +150,7 @@ public class EditStoresActivity extends AppCompatActivity {
 
         if (bExists) {Toast.makeText(this, "Found a duplicate store, please make sure to add stores only once", Toast.LENGTH_LONG).show();return;}
 
+        Store.addEvent(store, this);
         Store.addStore(this, store);
         storeAdapter.stores.add(store);
         storeAdapter.notifyDataSetChanged();

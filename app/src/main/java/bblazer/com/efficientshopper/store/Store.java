@@ -10,9 +10,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import bblazer.com.efficientshopper.R;
+import bblazer.com.efficientshopper.event.Event;
 import bblazer.com.efficientshopper.meal.Meal;
 
 /**
@@ -138,5 +140,32 @@ public class Store {
     public void updateFrom(Store store) {
         this.name        = store.name;
         this.departments = store.departments;
+    }
+
+    public static void addEvent(Store store, Context context) {
+        Event addEvent = new Event();
+        addEvent.setType("Store");
+        addEvent.setDescription("Added "+store.getName());
+        addEvent.setCreated(Calendar.getInstance());
+
+        Event.addEvent(context, addEvent);
+    }
+
+    public static void updateEvent(Store store, Context context) {
+        Event addEvent = new Event();
+        addEvent.setType("Store");
+        addEvent.setDescription("Updated "+store.getName());
+        addEvent.setCreated(Calendar.getInstance());
+
+        Event.addEvent(context, addEvent);
+    }
+
+    public static void deleteEvent(Store store, Context context) {
+        Event addEvent = new Event();
+        addEvent.setType("Store");
+        addEvent.setDescription("Deleted "+store.getName());
+        addEvent.setCreated(Calendar.getInstance());
+
+        Event.addEvent(context, addEvent);
     }
 }

@@ -19,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
+
 import java.util.ArrayList;
 
 import bblazer.com.efficientshopper.R;
@@ -28,7 +30,7 @@ import bblazer.com.efficientshopper.meal.ingredient.IngredientAdapter;
 public class AddNewMealActivity extends AppCompatActivity {
     private EditText mealName;
     private ListView ingredients;
-    private Spinner ingredientsSpinner;
+    private SearchableSpinner ingredientsSpinner;
     private ImageButton addIngredientButton;
     private RelativeLayout emptyView;
     private EditText notes;
@@ -71,11 +73,14 @@ public class AddNewMealActivity extends AppCompatActivity {
 
         mealName            = (EditText)findViewById(R.id.meal_name);
         ingredients         = (ListView)findViewById(R.id.list_view);
-        ingredientsSpinner  = (Spinner)findViewById(R.id.ingredients_spinner);
+        ingredientsSpinner  = (SearchableSpinner)findViewById(R.id.ingredients_spinner);
         addIngredientButton = (ImageButton)findViewById(R.id.add_ingredients_button);
         emptyView           = (RelativeLayout)findViewById(R.id.empty_view);
         notes               = (EditText)findViewById(R.id.notes);
         mealTypeSpinner     = (Spinner)findViewById(R.id.meal_type_spinner);
+
+        ingredientsSpinner.setTitle("Search Ingredient");
+        ingredientsSpinner.setPositiveButton("OK");
 
         // Add a listener for the ingredient amount numberfield on change
         mealName.addTextChangedListener(new TextWatcher() {
@@ -164,7 +169,7 @@ public class AddNewMealActivity extends AppCompatActivity {
     }
 
     private void checkEmpty() {
-        if (meal.getIngredients().size() == 0) {
+        if (((IngredientAdapter)ingredients.getAdapter()).ingredients.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
         }
         else {
@@ -229,11 +234,19 @@ public class AddNewMealActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Ingredient ingredient = meal.getIngredients().get(((AdapterView.AdapterContextMenuInfo)menuInfo).position);
+        Ingredient ingredient = ((IngredientAdapter)ingredients.getAdapter()).ingredients.get(((AdapterView.AdapterContextMenuInfo)menuInfo).position);
         switch(item.getItemId()) {
             case R.id.edit:
                 return true;
             case R.id.delete:
+                ArrayList<Ingredient> currentIngredients = meal.getIngredients();
+                for (Ingredient currentIngredient :
+                        currentIngredients) {
+                    if (currentIngredient.getName().equals(ingredient.getName())) {
+                        meal.removeIngredient(currentIngredient);
+                    }
+                }
+
                 ((IngredientAdapter)ingredients.getAdapter()).ingredients.remove(ingredient);
                 ((IngredientAdapter)ingredients.getAdapter()).notifyDataSetChanged();
 
@@ -259,7 +272,7 @@ public class AddNewMealActivity extends AppCompatActivity {
         // Make sure this ingredient doesn't already exist
         boolean bExists = false;
         for (Ingredient ingredient :
-                meal.getIngredients()) {
+                ((IngredientAdapter)ingredients.getAdapter()).ingredients) {
             if (ingredient.getName().equals(ingredientObj.getName())) {bExists = true;}
         }
 
@@ -268,6 +281,7 @@ public class AddNewMealActivity extends AppCompatActivity {
 
         // Add the ingredient to the meal
         meal.addIngredient(ingredientObj);
+        ((IngredientAdapter)ingredients.getAdapter()).ingredients.add(ingredientObj);
 
         // Add the ingredient to the listview
         ((IngredientAdapter)ingredients.getAdapter()).notifyDataSetChanged();

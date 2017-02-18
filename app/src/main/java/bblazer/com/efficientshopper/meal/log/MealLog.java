@@ -1,6 +1,7 @@
 package bblazer.com.efficientshopper.meal.log;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import bblazer.com.efficientshopper.R;
+import bblazer.com.efficientshopper.event.Event;
 import bblazer.com.efficientshopper.meal.ingredient.Ingredient;
 
 /**
@@ -20,7 +22,7 @@ import bblazer.com.efficientshopper.meal.ingredient.Ingredient;
 public class MealLog {
     private String name;
     private Calendar timeEaten;
-    private ArrayList<Ingredient> ingredientsEaten;
+    private ArrayList<Ingredient> ingredientsEaten = new ArrayList<>();
 
     public MealLog() {
         return;
@@ -129,5 +131,32 @@ public class MealLog {
         this.name             = mealLog.name;
         this.timeEaten        = mealLog.timeEaten;
         this.ingredientsEaten = cloneIngredients(mealLog);
+    }
+
+    public static void addEvent(MealLog mealLog, Context context) {
+        Event addEvent = new Event();
+        addEvent.setType("Meal Log");
+        addEvent.setDescription("Added "+mealLog.getName());
+        addEvent.setCreated(Calendar.getInstance());
+
+        Event.addEvent(context, addEvent);
+    }
+
+    public static void updateEvent(MealLog mealLog, Context context) {
+        Event addEvent = new Event();
+        addEvent.setType("Meal Log");
+        addEvent.setDescription("Updated "+mealLog.getName());
+        addEvent.setCreated(Calendar.getInstance());
+
+        Event.addEvent(context, addEvent);
+    }
+
+    public static void deleteEvent(MealLog mealLog, Context context) {
+        Event addEvent = new Event();
+        addEvent.setType("Meal Log");
+        addEvent.setDescription("Deleted "+mealLog.getName());
+        addEvent.setCreated(Calendar.getInstance());
+
+        Event.addEvent(context, addEvent);
     }
 }

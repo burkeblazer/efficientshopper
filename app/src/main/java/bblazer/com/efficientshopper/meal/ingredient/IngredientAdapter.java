@@ -10,6 +10,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.TreeMap;
 
 import bblazer.com.efficientshopper.R;
 
@@ -25,8 +29,44 @@ public class IngredientAdapter extends BaseAdapter {
     public IngredientAdapter(Activity activity, ArrayList<Ingredient> ingredients) {
         this.activity    = activity;
         this.ingredients = ingredients;
-
+        groupAndSortIngredients();
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    private void groupAndSortIngredients() {
+        // Group them
+        Map<String, ArrayList<Ingredient>> groupedIngredients = new TreeMap<String, ArrayList<Ingredient>>();
+        for (Ingredient ingredient :
+                this.ingredients) {
+            if (groupedIngredients.containsKey(ingredient.getDepartment().getName())) {
+                groupedIngredients.get(ingredient.getDepartment().getName()).add(ingredient);
+            }
+            else {
+                ArrayList<Ingredient> newGroup = new ArrayList<>();
+                newGroup.add(ingredient);
+                groupedIngredients.put(ingredient.getDepartment().getName(), newGroup);
+            }
+        }
+
+        this.ingredients = new ArrayList<>();
+
+        // Sort the groups
+        for (Map.Entry<String, ArrayList<Ingredient>> entry : groupedIngredients.entrySet())
+        {
+            ArrayList<Ingredient> currentGroup = entry.getValue();
+            Collections.sort(currentGroup, new IngredientComparator());
+            for (Ingredient sortedIngredient :
+                    currentGroup) {
+                this.ingredients.add(sortedIngredient);
+            }
+        }
+    }
+
+    public class IngredientComparator implements Comparator<Ingredient> {
+        @Override
+        public int compare(Ingredient o1, Ingredient o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
     }
 
     @Override

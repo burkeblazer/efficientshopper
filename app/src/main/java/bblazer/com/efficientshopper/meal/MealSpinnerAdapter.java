@@ -24,11 +24,11 @@ import bblazer.com.efficientshopper.R;
  * Created by bblazer on 1/29/2017.
  */
 
-public class MealAdapter extends BaseAdapter {
+public class MealSpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
     public ArrayList<Meal> meals;
     private static LayoutInflater inflater;
 
-    public MealAdapter(Activity activity, ArrayList<Meal> meals) {
+    public MealSpinnerAdapter(Activity activity, ArrayList<Meal> meals) {
         this.meals = meals;
         groupAndSortMeals();
         inflater   = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -48,9 +48,9 @@ public class MealAdapter extends BaseAdapter {
                 groupedMeals.put(meal.getMealType(), newGroup);
             }
         }
-
+        
         this.meals = new ArrayList<>();
-
+        
         // Sort the groups
         for (Map.Entry<String, ArrayList<Meal>> entry : groupedMeals.entrySet())
         {
@@ -100,6 +100,42 @@ public class MealAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        View vi = convertView;
+        ViewHolder holder;
+        Meal meal = getItem(position);
+
+        if (convertView == null) {
+            vi = inflater.inflate(R.layout.meal_row, null);
+
+            holder = new ViewHolder();
+            holder.groupName = (TextView) vi.findViewById(R.id.group_header_name);
+            holder.mealName = (TextView) vi.findViewById(R.id.meal_name);
+            holder.notesImage = (ImageView) vi.findViewById(R.id.notes_image);
+            holder.groupHeader = (LinearLayout) vi.findViewById(R.id.group_header);
+
+            vi.setTag(holder);
+        }
+        else {
+            holder = (ViewHolder)vi.getTag();
+        }
+
+        holder.groupName.setText(meal.getMealType());
+        holder.mealName.setText(meal.getName());
+
+        if (meal.getNotes() == null || meal.getNotes().equals("")) {
+            holder.notesImage.setVisibility(View.INVISIBLE);
+        }
+        else {
+            holder.notesImage.setVisibility(View.VISIBLE);
+        }
+
+        holder.groupHeader.setVisibility(View.GONE);
+
+        return vi;
+    }
+
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         ViewHolder holder;
         Meal meal = getItem(position);

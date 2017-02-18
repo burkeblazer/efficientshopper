@@ -47,12 +47,14 @@
                 android:layout_height="40dp">
 
                 <TextView
+                    android:textSize="17dp"
+                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Log name:"/>
 
                 <EditText
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginLeft="39dp"
                     android:id="@+id/log_name"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -67,7 +69,9 @@
                 android:layout_height="40dp">
 
                 <TextView
-                    android:layout_marginRight="17dp"
+                    android:textSize="17dp"
+                    android:textStyle="bold"
+                    android:layout_marginRight="46dp"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -87,13 +91,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp">
 
-                <TextView
-                    android:id="@+id/dropdown_label"
-                    android:layout_marginRight="30dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Meals:"/>
+                <Spinner
+                    style="@style/SpinnerTheme"
+                    android:entries="@array/ingredient_type_spinner_values"
+                    android:id="@+id/ingredient_type_spinner"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="115dp"
+                    android:layout_height="30dp"></Spinner>
 
                 <Spinner
                     style="@style/SpinnerTheme"
@@ -108,7 +112,7 @@
                     android:layout_marginLeft="-40dp"
                     android:id="@+id/add_ingredients_button"
                     android:layout_gravity="center_vertical"
-                    android:src="@android:drawable/ic_menu_zoom"
+                    android:src="@android:drawable/ic_input_add"
                     android:onClick="toggleDropdown"
                     android:layout_width="40dp"
                     android:layout_height="40dp"/>

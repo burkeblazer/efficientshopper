@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -29,6 +28,7 @@ import bblazer.com.efficientshopper.R;
 import bblazer.com.efficientshopper.ViewShoppingListActivity;
 import bblazer.com.efficientshopper.meal.Meal;
 import bblazer.com.efficientshopper.meal.MealAdapter;
+import bblazer.com.efficientshopper.meal.MealSpinnerAdapter;
 
 public class EditMealPlanActivity extends AppCompatActivity {
     private EditText listName;
@@ -103,17 +103,8 @@ public class EditMealPlanActivity extends AppCompatActivity {
             }
         });
 
-        // Create string adapter for meals dropdown
-        ArrayList<String> mealsStr  = new ArrayList<String>();
-        ArrayList<Meal> mealsArray  = Meal.getMeals(this);
-        for (Meal meal :
-                mealsArray) {
-            mealsStr.add(meal.getName());
-        }
-
-        ArrayAdapter<String> mealAdapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mealsStr);
-        mealAdapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mealsSpinner.setAdapter(mealAdapterSpinner);
+        MealSpinnerAdapter mealSpinnerAdapterSpinner = new MealSpinnerAdapter(this, Meal.getMeals(this));
+        mealsSpinner.setAdapter(mealSpinnerAdapterSpinner);
 
         MealAdapter mealAdapter = new MealAdapter(this, mealPlan.getMeals());
         listView.setAdapter(mealAdapter);
@@ -165,6 +156,14 @@ public class EditMealPlanActivity extends AppCompatActivity {
             case R.id.edit:
                 return true;
             case R.id.delete:
+                ArrayList<Meal> currentMeals = mealPlan.getMeals();
+                for (Meal currentMeal :
+                        currentMeals) {
+                    if (currentMeal.getName().equals(meal.getName())) {
+                        mealPlan.removeMeal(currentMeal);
+                    }
+                }
+
                 ((MealAdapter)listView.getAdapter()).meals.remove(meal);
                 ((MealAdapter)listView.getAdapter()).notifyDataSetChanged();
 
@@ -229,14 +228,7 @@ public class EditMealPlanActivity extends AppCompatActivity {
     private void addMeal() {
         // Create a new meal object from the string selected in the spinner
         ArrayList<Meal> meals = Meal.getMeals(this);
-        String selectedMeal = mealsSpinner.getSelectedItem().toString();
-        Meal mealObj = new Meal("");
-        for (Meal meal :
-                meals) {
-            if (meal.getName().equals(selectedMeal)) {
-                mealObj = meal;
-            }
-        }
+        Meal mealObj = Meal.clone((Meal)mealsSpinner.getAdapter().getItem(mealsSpinner.getSelectedItemPosition()));
 
         // Make sure this meal doesn't already exist
         boolean bExists = false;
@@ -252,6 +244,7 @@ public class EditMealPlanActivity extends AppCompatActivity {
         mealPlan.addMeal(mealObj);
 
         // Add the meal to the listview
+        ((MealAdapter)listView.getAdapter()).meals.add(mealObj);
         ((MealAdapter)listView.getAdapter()).notifyDataSetChanged();
         checkEmpty();
     }

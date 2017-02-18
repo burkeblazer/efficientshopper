@@ -104,6 +104,7 @@ public class ViewMealLogsActivity extends AppCompatActivity {
 
         // Probably here, remove pantry item amounts based on the meals eaten
 
+        MealLog.updateEvent(mealLog, this);
         MealLog.removeMealLog(this, previousName);
         MealLog.addMealLog(this, mealLog);
     }
@@ -126,6 +127,7 @@ public class ViewMealLogsActivity extends AppCompatActivity {
                 editMealLog(mealLog);
                 return true;
             case R.id.delete:
+                MealLog.deleteEvent(mealLog, this);
                 MealLog.removeMealLog(this, mealLog.getName());
                 mealLogAdapter.mealLogs.remove(mealLog);
                 mealLogAdapter.notifyDataSetChanged();
@@ -149,6 +151,7 @@ public class ViewMealLogsActivity extends AppCompatActivity {
         if (bExists) {
             Toast.makeText(this, "Found a duplicate meal log, please make sure to add meal logs only once", Toast.LENGTH_LONG).show();return;}
 
+        MealLog.addEvent(mealLog, this);
         MealLog.addMealLog(this, mealLog);
         mealLogAdapter.mealLogs.add(mealLog);
         mealLogAdapter.notifyDataSetChanged();

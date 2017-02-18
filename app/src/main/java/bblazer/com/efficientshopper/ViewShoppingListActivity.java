@@ -203,14 +203,42 @@ public class ViewShoppingListActivity extends AppCompatActivity {
         }
 
         // Grab the departments of the store and the ingredients of the meals
+        ArrayList<Ingredient> pantryIngs  = Ingredient.getIngredients(this);
         ArrayList<Department> departments = store.getDepartments();
         ArrayList<Meal> meals             = mealPlan.getMeals();
+        ArrayList<Meal> allMeals          = Meal.getMeals(this);
         ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
         for (Meal meal :
                 meals) {
-            ArrayList<Ingredient> mealIngredients = meal.getIngredients();
+            Meal selectedMeal = null;
+            for (Meal currentMeal :
+                    allMeals) {
+                if (currentMeal.getName().equals(meal.getName())) {selectedMeal = currentMeal;}
+            }
+
+            // Couldn't find the meal
+            if (selectedMeal == null) {continue;}
+
+            ArrayList<Ingredient> mealIngredients = selectedMeal.getIngredients();
             for (Ingredient ingredient :
                     mealIngredients) {
+                // Check to see if the ingredient is covered in the pantry
+                Ingredient foundIngredient = null;
+                for (Ingredient pantryIngredient :
+                        pantryIngs) {
+                    if (pantryIngredient.getName().equals(ingredient.getName())) {
+                        foundIngredient = pantryIngredient;
+                    }
+                }
+
+                // If it found it set the proper amount based on how much is in the pantry
+                if (foundIngredient != null) {
+                    ingredient.setAmount(ingredient.getAmount() - foundIngredient.getAmount());
+
+                    // If there is no need to get this item because the pantry has it covered, don't add it to the list
+                    if (ingredient.getAmount() <= 0) {continue;}
+                }
+
                 boolean bExists = false;
                 for (Ingredient shoppListIngredient :
                         ingredients) {

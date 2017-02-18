@@ -36,6 +36,8 @@ import java.util.Calendar;
 
 import bblazer.com.efficientshopper.R;
 import bblazer.com.efficientshopper.meal.Meal;
+import bblazer.com.efficientshopper.meal.MealSpinnerAdapter;
+import bblazer.com.efficientshopper.meal.ingredient.DatePickerFragment;
 import bblazer.com.efficientshopper.meal.ingredient.Ingredient;
 import bblazer.com.efficientshopper.meal.ingredient.IngredientAdapter;
 
@@ -44,9 +46,9 @@ public class EditMealLogActivity extends AppCompatActivity implements
     private EditText logName;
     private Button logTimeButton;
     private Spinner mealsSpinner;
+    private Spinner ingredientTypeSpinner;
     private ListView listView;
     private RelativeLayout emptyView;
-    private TextView dropdownLabel;
 
     public static MealLog mealLog;
     public static ViewMealLogsActivity activity;
@@ -74,8 +76,25 @@ public class EditMealLogActivity extends AppCompatActivity implements
         mealsSpinner  = (Spinner) findViewById(R.id.meals_spinner);
         listView      = (ListView)findViewById(R.id.list_view);
         emptyView     = (RelativeLayout)findViewById(R.id.empty_view);
-        dropdownLabel = (TextView) findViewById(R.id.dropdown_label);
+        ingredientTypeSpinner = (Spinner) findViewById(R.id.ingredient_type_spinner);
 
+        ingredientTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String type = ingredientTypeSpinner.getAdapter().getItem(position).toString();
+                if (type.equals("Meals")) {
+                    loadMeals();
+                }
+                else {
+                    loadIngredients();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         calendar = Calendar.getInstance();
 
@@ -133,8 +152,6 @@ public class EditMealLogActivity extends AppCompatActivity implements
         ingredientsAdapter = new IngredientAdapter(this, new ArrayList<Ingredient>());
         listView.setAdapter(ingredientsAdapter);
         registerForContextMenu(listView);
-
-        loadMeals();
 
         if (isEdit) {
             loadMealLogData();
@@ -239,7 +256,6 @@ public class EditMealLogActivity extends AppCompatActivity implements
     private void loadIngredients() {
         // Create string adapter for meal dropdown
         ArrayList<String> ingredientStrings    = new ArrayList<>();
-        ingredientStrings.add(0, "");
         ArrayList<Ingredient> ingredientsArray = Ingredient.getIngredients(this);
         for (Ingredient ingredient :
                 ingredientsArray) {
@@ -249,25 +265,6 @@ public class EditMealLogActivity extends AppCompatActivity implements
         ArrayAdapter<String> ingredientsAdapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ingredientStrings);
         ingredientsAdapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mealsSpinner.setAdapter(ingredientsAdapterSpinner);
-
-        mealsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String ingredientName = (String)mealsSpinner.getAdapter().getItem(position);
-                ArrayList<Ingredient> ingredients = Ingredient.getIngredients(EditMealLogActivity.this);
-                Ingredient ingredient = new Ingredient("");
-                for (Ingredient currentIngredient :
-                        ingredients) {
-                    if (currentIngredient.getName().equals(ingredientName)) {ingredient = currentIngredient;}
-                }
-                addIngredient(ingredient);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-
-            }
-        });
     }
 
     @Override
@@ -338,24 +335,13 @@ public class EditMealLogActivity extends AppCompatActivity implements
     }
 
     private void loadMeals() {
-        // Create string adapter for meal dropdown
-        ArrayList<String> mealStrings = new ArrayList<>();
-        mealStrings.add(0, "");
-        ArrayList<Meal>   mealArray   = Meal.getMeals(this);
-        for (Meal meal :
-                mealArray) {
-            mealStrings.add(meal.getName());
-        }
+        MealSpinnerAdapter mealSpinnerAdapterSpinner = new MealSpinnerAdapter(this, Meal.getMeals(this));
+        mealsSpinner.setAdapter(mealSpinnerAdapterSpinner);
+    }
 
-        ArrayAdapter<String> mealsAdapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mealStrings);
-        mealsAdapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mealsSpinner.setAdapter(mealsAdapterSpinner);
-
-        mealsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String mealName = (String)mealsSpinner.getAdapter().getItem(position);
-                if (mealName.equals("")) {return;}
+    public void toggleDropdown(View view) {
+        if (ingredientTypeSpinner.getAdapter().getItem(ingredientTypeSpinner.getSelectedItemPosition()).toString().equals("Meals")) {
+                String mealName       = ((Meal)mealsSpinner.getAdapter().getItem(mealsSpinner.getSelectedItemPosition())).getName();
                 ArrayList<Meal> meals = Meal.getMeals(EditMealLogActivity.this);
                 Meal meal = new Meal("");
                 for (Meal currentMeal :
@@ -363,23 +349,16 @@ public class EditMealLogActivity extends AppCompatActivity implements
                     if (currentMeal.getName().equals(mealName)) {meal = currentMeal;}
                 }
                 addIngredients(meal);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-
-            }
-        });
-    }
-
-    public void toggleDropdown(View view) {
-        if (dropdownLabel.getText().toString().equals("Meals:")) {
-            loadIngredients();
-            dropdownLabel.setText("Ingredients:");
         }
         else {
-            loadMeals();
-            dropdownLabel.setText("Meals:");
+                String ingredientName = (String)mealsSpinner.getAdapter().getItem(mealsSpinner.getSelectedItemPosition());
+                ArrayList<Ingredient> ingredients = Ingredient.getIngredients(EditMealLogActivity.this);
+                Ingredient ingredient = new Ingredient("");
+                for (Ingredient currentIngredient :
+                        ingredients) {
+                    if (currentIngredient.getName().equals(ingredientName)) {ingredient = currentIngredient;}
+                }
+                addIngredient(ingredient);
         }
     }
 
@@ -411,84 +390,3 @@ public class EditMealLogActivity extends AppCompatActivity implements
     }
 }
 
-class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener
-{
-    public interface DatePickerListener
-    {
-        public void onDateSet(int year, int month, int day);
-    }
-
-    private DatePickerListener listener;
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the current date as the default date in the picker
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-
-        // Create a new instance of DatePickerDialog and return it
-        return new DatePickerDialog(getActivity(), this, year, month, day);
-    }
-
-    @Override
-    public void onAttach(Activity activity)
-    {
-        super.onAttach(activity);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            listener = (DatePickerListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
-    }
-
-    public void onDateSet(DatePicker view, int year, int month, int day)
-    {
-        listener.onDateSet(year, month, day);
-    }
-}
-
-class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener
-{
-    public interface TimePickerListener
-    {
-        public void onTimeSet(int hourOfDay, int minute);
-    }
-
-    private TimePickerListener listener;
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
-        final Calendar c=Calendar.getInstance();
-        int hour=c.get(Calendar.HOUR_OF_DAY);
-        int minute=c.get(Calendar.MINUTE);
-        return new TimePickerDialog(getActivity(),this,hour,minute, DateFormat.is24HourFormat(getActivity()));
-    }
-
-    @Override
-    public void onAttach(Activity activity)
-    {
-        super.onAttach(activity);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            listener = (TimePickerListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
-    }
-
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute)
-    {
-        listener.onTimeSet(hourOfDay, minute);
-    }
-}

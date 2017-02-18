@@ -104,6 +104,7 @@ public class ViewMealPlansActivity extends AppCompatActivity {
             }
         }
 
+        MealPlan.updateEvent(mealPlan, this);
         MealPlan.removeMealPlan(this, previousName);
         MealPlan.addMealPlan(this, mealPlan);
     }
@@ -126,6 +127,7 @@ public class ViewMealPlansActivity extends AppCompatActivity {
                 editMealPlan(mealPlan);
                 return true;
             case R.id.delete:
+                MealPlan.deleteEvent(mealPlan, this);
                 MealPlan.removeMealPlan(this, mealPlan.getName());
                 mealPlanAdapter.mealPlans.remove(mealPlan);
                 mealPlanAdapter.notifyDataSetChanged();
@@ -149,6 +151,7 @@ public class ViewMealPlansActivity extends AppCompatActivity {
         if (bExists) {
             Toast.makeText(this, "Found a duplicate meal plan, please make sure to add meal plans only once", Toast.LENGTH_LONG).show();return;}
 
+        MealPlan.addEvent(mealPlan, this);
         MealPlan.addMealPlan(this, mealPlan);
         mealPlanAdapter.mealPlans.add(mealPlan);
         mealPlanAdapter.notifyDataSetChanged();

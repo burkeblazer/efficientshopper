@@ -73,7 +73,7 @@ public class EditPantryActivity extends AppCompatActivity {
     }
 
     private void checkEmpty() {
-        if (ingredients.size() == 0) {
+        if (ingredientAdapter.ingredients.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
         }
         else {
@@ -98,7 +98,7 @@ public class EditPantryActivity extends AppCompatActivity {
     public void updateIngredient(Ingredient ingredient, String previousName) {
         // Find the previous ingredient and update it
         for (Ingredient previousIngredient :
-                ingredients) {
+                ingredientAdapter.ingredients) {
             if (previousName.equals(previousIngredient.getName())) {
                 previousIngredient.updateFrom(ingredient);
             }
@@ -107,6 +107,8 @@ public class EditPantryActivity extends AppCompatActivity {
         if (!previousName.equals(ingredient.getName())) {
             Meal.checkIngredientUpdate(previousName, ingredient.getName(), this);
         }
+
+        Ingredient.updateEvent(ingredient, this);
 
         Ingredient.removeIngredient(this, previousName);
         Ingredient.addIngredient(this, ingredient);
@@ -124,12 +126,13 @@ public class EditPantryActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Ingredient ingredient = ingredients.get(((AdapterView.AdapterContextMenuInfo)menuInfo).position);
+        Ingredient ingredient = ingredientAdapter.ingredients.get(((AdapterView.AdapterContextMenuInfo)menuInfo).position);
         switch(item.getItemId()) {
             case R.id.edit:
                 editIngredient(ingredient);
                 return true;
             case R.id.delete:
+                Ingredient.deleteEvent(ingredient, this);
                 Ingredient.removeIngredient(this, ingredient.getName());
                 ingredientAdapter.ingredients.remove(ingredient);
                 ingredientAdapter.notifyDataSetChanged();
@@ -146,13 +149,14 @@ public class EditPantryActivity extends AppCompatActivity {
         // Make sure they aren't trying to add a ingredient that already exists
         boolean bExists = false;
         for (Ingredient currentIngredient :
-                ingredients) {
+                ingredientAdapter.ingredients) {
             if (currentIngredient.getName().equals(ingredient.getName())) {bExists = true;}
         }
 
         if (bExists) {
             Toast.makeText(this, "Found a duplicate ingredient, please make sure to add ingredients only once", Toast.LENGTH_LONG).show();return;}
 
+        Ingredient.addEvent(ingredient, this);
         Ingredient.addIngredient(this, ingredient);
         ingredientAdapter.ingredients.add(ingredient);
         ingredientAdapter.notifyDataSetChanged();

@@ -17,9 +17,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import bblazer.com.efficientshopper.R;
-import bblazer.com.efficientshopper.meal.AddNewMealActivity;
-import bblazer.com.efficientshopper.meal.Meal;
-import bblazer.com.efficientshopper.meal.MealAdapter;
 
 public class EditMealsActivity extends AppCompatActivity {
     private RelativeLayout emptyView;
@@ -74,7 +71,7 @@ public class EditMealsActivity extends AppCompatActivity {
     }
 
     private void checkEmpty() {
-        if (meals.size() == 0) {
+        if (mealAdapter.meals.size() == 0) {
             emptyView.setVisibility(View.VISIBLE);
         }
         else {
@@ -108,7 +105,7 @@ public class EditMealsActivity extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Meal meal = meals.get(((AdapterView.AdapterContextMenuInfo)menuInfo).position);
+        Meal meal = mealAdapter.meals.get(((AdapterView.AdapterContextMenuInfo)menuInfo).position);
         switch(item.getItemId()) {
             case R.id.edit:
                 editMeal(meal);
@@ -128,7 +125,7 @@ public class EditMealsActivity extends AppCompatActivity {
     public void updateMeal(Meal meal, String previousName) {
         // Find the previous meal and update it
         for (Meal previousMeal :
-                meals) {
+                mealAdapter.meals) {
             if (previousName.equals(previousMeal.getName())) {
                 previousMeal.updateFrom(meal);
             }
@@ -142,7 +139,7 @@ public class EditMealsActivity extends AppCompatActivity {
         // Make sure they aren't trying to add a meal that already exists
         boolean bExists = false;
         for (Meal currentMeal :
-                meals) {
+                mealAdapter.meals) {
             if (currentMeal.getName().equals(meal.getName())) {bExists = true;}
         }
 

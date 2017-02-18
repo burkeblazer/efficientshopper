@@ -3,7 +3,7 @@
     package="bblazer.com.efficientshopper">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -58,12 +58,17 @@
             android:name=".meal.log.ViewMealLogsActivity"
             android:label="@string/title_activity_view_meal_logs"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".meal.log.EditMealLogActivity"
+        <activity
+            android:name=".meal.log.EditMealLogActivity"
             android:label="@string/title_activity_view_meal_logs"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <!--<service android:name=".NotificationService" />-->
-        <receiver android:name=".BootReceiver"></receiver>
+        <!-- <service android:name=".NotificationService" /> -->
+        <receiver android:name=".BootReceiver" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>
