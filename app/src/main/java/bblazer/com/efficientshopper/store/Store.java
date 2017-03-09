@@ -11,11 +11,9 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import bblazer.com.efficientshopper.R;
 import bblazer.com.efficientshopper.event.Event;
-import bblazer.com.efficientshopper.meal.Meal;
 
 /**
  * Created by bblazer on 1/25/2017.

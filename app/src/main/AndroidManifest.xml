@@ -19,11 +19,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".store.EditStoresActivity"
+            android:name="bblazer.com.efficientshopper.store.EditStoresActivity"
             android:label="@string/title_activity_edit_stores"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".store.AddNewStoreActivity"
+            android:name="bblazer.com.efficientshopper.store.AddNewStoreActivity"
             android:label="Add New Store"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -33,7 +33,15 @@
         <activity
             android:name=".meal.AddNewMealActivity"
             android:label="Add New Meal"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".meal.ingredient.EditPantryActivity"
             android:label="Edit Pantry"

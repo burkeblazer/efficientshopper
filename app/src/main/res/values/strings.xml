@@ -10,12 +10,12 @@
     <string name="title_activity_edit_list">EditListActivity</string>
     <string name="shopping_list_json">SHOPPING_LIST</string>
     <string name="meal_plan_json">MEAL_PLANS</string>
+    <string name="meal_logs_json">MEAL_LOGS_JSON</string>
     <string-array name="frequency_spinner_array">
         <item>One Time</item>
         <item>Weekly</item>
     </string-array>
     <string name="title_activity_view_meal_logs">ViewMealLogsActivity</string>
-    <string name="meal_logs_json">MEAL_LOGS_JSON</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->

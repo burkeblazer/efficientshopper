@@ -25,6 +25,7 @@ public class Ingredient {
     private String name;
     private Department department;
     private int amount;
+    private UOM uom;
     private int sortOrder;
     private boolean checked;
     private Date expirationDate;
@@ -71,6 +72,14 @@ public class Ingredient {
 
     public boolean isChecked() {
         return checked;
+    }
+
+    public UOM getUom() {
+        return uom;
+    }
+
+    public void setUom(UOM uom) {
+        this.uom = uom;
     }
 
     public void setChecked(boolean checked) {
@@ -145,6 +154,7 @@ public class Ingredient {
         Ingredient newIngredient     = new Ingredient(ingredient.getName());
         newIngredient.department     = ingredient.department;
         newIngredient.amount         = ingredient.amount;
+        newIngredient.uom            = ingredient.uom;
         newIngredient.expirationDate = ingredient.expirationDate;
 
         return newIngredient;
@@ -154,6 +164,7 @@ public class Ingredient {
         this.name           = ingredient.name;
         this.department     = ingredient.department;
         this.amount         = ingredient.amount;
+        this.uom            = ingredient.uom;
         this.expirationDate = ingredient.expirationDate;
     }
 
